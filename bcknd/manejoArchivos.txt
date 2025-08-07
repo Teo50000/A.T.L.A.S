@@ -1,0 +1,9 @@
+https://geekflare.com/es/handling-files-in-javascript/
+https://www.youtube.com/watch?v=dy6lHvo-jJU
+
+fs.funcionFile("rutaDeArchivo", otrascosas)
+append - escribe al final
+write - sobreescribe todo
+read - lee el archivo
+unlink - elimina archivo
+rename - renombra el archivo
