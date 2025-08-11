@@ -7,3 +7,18 @@ write - sobreescribe todo
 read - lee el archivo
 unlink - elimina archivo
 rename - renombra el archivo
+
+Ejeplo de funcion que duplica el texto de un archico:
+fs.readFile("./index.js", (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+        coso = data.toString()
+        console.log(coso)
+        
+        fs.appendFile("./index.js", "\n" + coso ,(err) =>{
+            if (err) throw err;
+        console.log("¡Completado!");
+        });
+  });
