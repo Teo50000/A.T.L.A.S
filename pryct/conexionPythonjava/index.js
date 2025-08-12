@@ -20,6 +20,8 @@ app.use((req, res, next) => {
 import { spawn } from 'child_process';
 
 console.log("jauduiudu")
+let a  = ""
+let b = ""
 app.post('/echo', (req, res) => {
 
 	// spawn recibe el comando a ejecutar y los argumentos, es similar a utilizar desde línea de comandos "python script_python.py"
@@ -30,11 +32,14 @@ app.post('/echo', (req, res) => {
 	// stdout: Se encarga de la salida de datos del stdout del subproceso. En este caso, recibe datos del subproceso de Python.
 	// .stdout.on('data',…): Ejecuta una función especificada cuando se reciben los datos que envía el subproceso.
 	pythonProcess.stdout.on('data', function(data) {
-		pythonResponse += data.toString();
+		pythonResponse += data.toString()
+		let qwert = pythonResponse.trim().split('\n');
+		a = qwert[1]
+		b = qwert[0]
 	})
 	// .stdout.on('end',…): Ejecuta una función especificada cuando se terminan de recibir datos desde el subproceso.
 	pythonProcess.stdout.on('end', function() {
-		const respF = pythonResponse.trim() +  ", tambien del back"
+		const respF = a + ", sos medio pelotudo" + b +  ", tambien del back"
 		res.json({respF});
 	})
 
