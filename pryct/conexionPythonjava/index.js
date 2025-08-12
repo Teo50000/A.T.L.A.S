@@ -4,6 +4,7 @@ import express from 'express';
 
 const app = express();
 app.use(express.json());
+import fs from 'fs';
 
 
 // Configura CORS para permitir solicitudes desde tu Live Server
@@ -39,7 +40,7 @@ app.post('/echo', (req, res) => {
 	})
 	// .stdout.on('end',…): Ejecuta una función especificada cuando se terminan de recibir datos desde el subproceso.
 	pythonProcess.stdout.on('end', function() {
-		const respF = a + ", sos medio pelotudo" + b +  ", tambien del back"
+		const respF = a + ", sos medio uhghjhg" + b +  ", tambien del back"
 		res.json({respF});
 	})
 
@@ -48,8 +49,11 @@ app.post('/echo', (req, res) => {
 	pythonProcess.stdin.write(req.body.nombre)
 	// .stdin.end(): Indica al subproceso que el envío de datos finalizó para que pueda ejecutar sus acciones
 	pythonProcess.stdin.end()
+
+
 });
 
 app.listen(3000, () => {
 	console.log(`Servidor escuchando en http://localhost: 3000`);
 });
+ //LO MODIFIQUE DESDE EL FRONTTTTT
