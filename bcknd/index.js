@@ -51,8 +51,8 @@ app.use((req, res, next) => {
 	pythonProcess.stdin.end()
   });
 
-  function cambia (carpeta, archivoAE){
-      fs.readFile(carpeta + archivoAE, (err, contenido) =>{
+  function cambia (carpeta, archivoAC){
+      fs.readFile(carpeta + archivoAC, (err, contenido) =>{
         if(err){
           respuesta =  `Lo lamento, no encuento un archivo llamado ${archivoAE} en ${carpeta}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
           return;
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
           pythonResponse2 += data.toString()
         })
         pythonProcess2.stdout.on('end', function(){
-          fs.writeFile(carpeta + archivoAE, coso, (err) => {
+          fs.writeFile(carpeta + archivoAC, coso, (err) => {
             if (err) throw err;
             respuesta = "Listo, ya agregamos tu pedido al texto"
           })
@@ -81,17 +81,21 @@ function elimina (carpeta, archivoAE){
     respuesta = `${archivoAE} fue eliminado exitosamente.`
   })
 }
-function copiar (carpetaVieja, carpetaNueva, archivoAE){
+function copiar (carpetaVieja, carpetaNueva, archivoACo){
   let coso = ""
-  fs.readFile(carpetaVieja + archivoAE, (err, contenido) =>{
+  fs.readFile(carpetaVieja + archivoACo, (err, contenido) =>{
     if(err){
       respuesta = `Lo lamentamos, el archivo al que desea aplicarle la operacion no existe, revisa si se encuentra en otra carpeta o si tiene un nombre similar`
       return;
     }
     coso = contenido.toString()
   })
-  fs.writeFile(carpetaNueva + archivoAE, coso, (err) =>{
+  fs.writeFile(carpetaNueva + archivoACo, coso, (err) =>{
     if (err) throw err;
   console.log("¡Completado!");
   });
+}
+function mover (carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM){
+  copiar(carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM);
+  elimina(carpetadelaquehayquesacar, archivoAM)
 }
