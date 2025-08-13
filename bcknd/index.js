@@ -51,10 +51,11 @@ app.use((req, res, next) => {
 	pythonProcess.stdin.end()
   });
 
-  function agrega (carpeta, archivoAE){
+  function cambia (carpeta, archivoAE){
       fs.readFile(carpeta + archivoAE, (err, contenido) =>{
         if(err){
           respuesta =  `Lo lamento, no encuento un archivo llamado ${archivoAE} en ${carpeta}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
+          return;
         }
 
         let coso = contenido.toString()
@@ -70,5 +71,13 @@ app.use((req, res, next) => {
           })
         })
       })
-    
   }
+function elimina (carpeta, archivoAE){
+  fs.unlink(carpeta + archivoAE, (err) =>{
+    if(err){
+      respuesta = `Lo lamentamos, el archivo que desea eliminar no existe. Intenta ver si esta en otra carpeta o posee un nombre similar`
+      return;
+    }
+    respuesta = `${archivoAE} fue eliminado exitosamente.`
+  })
+}
