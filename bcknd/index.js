@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   let txtEnvio = ""
   let iAnswer = {
     pedido: "",
-    nombreArchivo: "",
+    nombreArchivos: "",
     ubicacion: "",
     txtAIngrsr: "",
   }
@@ -52,22 +52,24 @@ app.use((req, res, next) => {
   });
 
   function agrega (){
-    fs.readFile(ubint + nombreArchivo, (err, contenido) =>{
-      if(err){
-        respuesta =  `Lo lamento, no encuento un archivo llamado ${iAnswer.nombreArchivo} en ${iAnswer.ubicacion}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
-      }
+    for(let i = 0; i < iAnswer.nombreArchivos.length; i++){
+      fs.readFile(ubint + iAnswer.nombreArchivos[i], (err, contenido) =>{
+        if(err){
+          respuesta =  `Lo lamento, no encuento un archivo llamado ${iAnswer.nombreArchivos[i]} en ${iAnswer.ubicacion}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
+        }
 
-      let coso = contenido.toString()
-      const pythonProcess2 = spawn('python', ['python.py'])
-	    let pythonResponse2 = ""
-      pythonProcess2.stdout.on('data', function(data) {
-        pythonResponse2 += data.toString()
-      })
-      pythonProcess2.stdout.on('end', function(){
-        fs.writeFile(ubint + nombreArchivo, coso, (err) => {
-          if (err) throw err;
-          respuesta = "Listo, ya agregamos tu pedido al texto"
+        let coso = contenido.toString()
+        const pythonProcess2 = spawn('python', ['python.py'])
+        let pythonResponse2 = ""
+        pythonProcess2.stdout.on('data', function(data) {
+          pythonResponse2 += data.toString()
+        })
+        pythonProcess2.stdout.on('end', function(){
+          fs.writeFile(ubint + iAnswer.nombreArchivos[i], coso, (err) => {
+            if (err) throw err;
+            respuesta = "Listo, ya agregamos tu pedido al texto"
+          })
         })
       })
-    })
+    }
   }
