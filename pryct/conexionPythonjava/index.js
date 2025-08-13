@@ -9,7 +9,7 @@ import fs from 'fs';
 
 // Configura CORS para permitir solicitudes desde tu Live Server
 app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500'); // <--- Es vital que esta URL sea la de tu Live Server
+	res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5501'); // <--- Es vital que esta URL sea la de tu Live Server
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 	next();
@@ -23,6 +23,7 @@ import { spawn } from 'child_process';
 console.log("jauduiudu")
 let a  = ""
 let b = ""
+let c = ""
 app.post('/echo', (req, res) => {
 
 	// spawn recibe el comando a ejecutar y los argumentos, es similar a utilizar desde línea de comandos "python script_python.py"
@@ -34,13 +35,18 @@ app.post('/echo', (req, res) => {
 	// .stdout.on('data',…): Ejecuta una función especificada cuando se reciben los datos que envía el subproceso.
 	pythonProcess.stdout.on('data', function(data) {
 		pythonResponse += data.toString()
-		let qwert = pythonResponse.trim().split('\n');
-		a = qwert[1]
-		b = qwert[0]
 	})
 	// .stdout.on('end',…): Ejecuta una función especificada cuando se terminan de recibir datos desde el subproceso.
 	pythonProcess.stdout.on('end', function() {
-		const respF = a + ", sos medio uhghjhg" + b +  ", tambien del back"
+		 // Ahora parseamos el JSON completo
+		 const parsed = JSON.parse(pythonResponse);
+
+		 // Ejemplo: supongamos que el Python envía un objeto con propiedades "bn" y "felicidad"
+		 const a = parsed.bn;
+		 const b = parsed.felicidad[0];
+	 
+		 // Construir respuesta
+		 const respF = `${a}, sos medio uhghjhg ${b}, tambien del back`;
 		res.json({respF});
 	})
 
