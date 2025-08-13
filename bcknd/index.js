@@ -81,8 +81,17 @@ function elimina (carpeta, archivoAE){
     respuesta = `${archivoAE} fue eliminado exitosamente.`
   })
 }
-function mover (carpetaVieja, carpetaNueva, archivoAE){
+function copiar (carpetaVieja, carpetaNueva, archivoAE){
+  let coso = ""
   fs.readFile(carpetaVieja + archivoAE, (err, contenido) =>{
-    
+    if(err){
+      respuesta = `Lo lamentamos, el archivo al que desea aplicarle la operacion no existe, revisa si se encuentra en otra carpeta o si tiene un nombre similar`
+      return;
+    }
+    coso = contenido.toString()
   })
+  fs.writeFile(carpetaNueva + archivoAE, coso, (err) =>{
+    if (err) throw err;
+  console.log("¡Completado!");
+  });
 }
