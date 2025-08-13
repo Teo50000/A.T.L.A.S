@@ -19,7 +19,7 @@ app.use((req, res, next) => {
   let iAnswer = {
     pedido: "",
     nombreArchivos: "",
-    ubicacion: "",
+    ubicacion_es: "",
     txtAIngrsr: "",
   }
   let ubint = ""
@@ -79,5 +79,10 @@ function elimina (carpeta, archivoAE){
       return;
     }
     respuesta = `${archivoAE} fue eliminado exitosamente.`
+  })
+}
+function mover (carpetaVieja, carpetaNueva, archivoAE){
+  fs.readFile(carpetaVieja + archivoAE, (err, contenido) =>{
+    
   })
 }
