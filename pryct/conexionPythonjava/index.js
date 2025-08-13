@@ -21,9 +21,10 @@ app.use((req, res, next) => {
 import { spawn } from 'child_process';
 
 console.log("jauduiudu")
-let a  = ""
-let b = ""
-let c = ""
+let loquerecibeelfrontend = {
+	felicidad: [],
+	bn: ""
+}
 app.post('/echo', (req, res) => {
 
 	// spawn recibe el comando a ejecutar y los argumentos, es similar a utilizar desde línea de comandos "python script_python.py"
@@ -42,11 +43,10 @@ app.post('/echo', (req, res) => {
 		 const parsed = JSON.parse(pythonResponse);
 
 		 // Ejemplo: supongamos que el Python envía un objeto con propiedades "bn" y "felicidad"
-		 const a = parsed.bn;
-		 const b = parsed.felicidad[0];
+		loquerecibeelfrontend = parsed
 	 
 		 // Construir respuesta
-		 const respF = `${a}, sos medio uhghjhg ${b}, tambien del back`;
+		 const respF = `${loquerecibeelfrontend.bn}, sos medio uhghjhg ${loquerecibeelfrontend.felicidad[0]}, tambien del back`;
 		res.json({respF});
 	})
 

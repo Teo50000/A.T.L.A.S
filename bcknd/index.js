@@ -22,16 +22,52 @@ app.use((req, res, next) => {
     ubicacion: "",
     txtAIngrsr: "",
   }
-
+  let ubint = ""
+  let respuesta = ""
   app.post('/echo', (req, res) => {
     // spawn recibe el comando a ejecutar y los argumentos, es similar a utilizar desde línea de comandos "python script_python.py"
 	const pythonProcess = spawn('python', ['python.py'])
 	let pythonResponse = ""
 
 
+    // stdout: Se encarga de la salida de datos del stdout del subproceso. En este caso, recibe datos del subproceso de Python.
+	// .stdout.on('data',…): Ejecuta una función especificada cuando se reciben los datos que envía el subproceso.
+	pythonProcess.stdout.on('data', function(data) {
+		pythonResponse += data.toString()
+	})
+	// .stdout.on('end',…): Ejecuta una función especificada cuando se terminan de recibir datos desde el subproceso.
+	pythonProcess.stdout.on('end', function() {
+		 // Ahora parseamos el JSON completo
+		 const parsed = JSON.parse(pythonResponse);
+
+		 // Ejemplo: supongamos que el Python envía un objeto con propiedades "bn" y "felicidad"
+		iAnswer = parsed
+  })
+
     	// stdin: Se encarga del ingreso de datos al stdin del subproceso. En este caso, envía datos del subproceso de Python.
 	// .stdin.write(datos): Envía datos al subproceso
-	pythonProcess.stdin.write(req.body.nombre)
+	pythonProcess.stdin.write(req.body.prompt)
 	// .stdin.end(): Indica al subproceso que el envío de datos finalizó para que pueda ejecutar sus acciones
 	pythonProcess.stdin.end()
   });
+
+  function agrega (){
+    fs.readFile(ubint + nombreArchivo, (err, contenido) =>{
+      if(err){
+        respuesta =  `Lo lamento, no encuento un archivo llamado ${iAnswer.nombreArchivo} en ${iAnswer.ubicacion}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
+      }
+
+      let coso = contenido.toString()
+      const pythonProcess2 = spawn('python', ['python.py'])
+	    let pythonResponse2 = ""
+      pythonProcess2.stdout.on('data', function(data) {
+        pythonResponse2 += data.toString()
+      })
+      pythonProcess2.stdout.on('end', function(){
+        fs.writeFile(ubint + nombreArchivo, coso, (err) => {
+          if (err) throw err;
+          respuesta = "Listo, ya agregamos tu pedido al texto"
+        })
+      })
+    })
+  }
