@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 		 // Ahora parseamos el JSON completo
 		 const parsed = JSON.parse(pythonResponse);
 
-		 // Ejemplo: supongamos que el Python envía un objeto con propiedades "bn" y "felicidad"
+		 // Ejemplo: supongamos que el Python envía un objeto
 		iAnswer = parsed
   })
 
@@ -51,11 +51,10 @@ app.use((req, res, next) => {
 	pythonProcess.stdin.end()
   });
 
-  function agrega (){
-    for(let i = 0; i < iAnswer.nombreArchivos.length; i++){
-      fs.readFile(ubint + iAnswer.nombreArchivos[i], (err, contenido) =>{
+  function agrega (carpeta, archivoAE){
+      fs.readFile(carpeta + archivoAE, (err, contenido) =>{
         if(err){
-          respuesta =  `Lo lamento, no encuento un archivo llamado ${iAnswer.nombreArchivos[i]} en ${iAnswer.ubicacion}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
+          respuesta =  `Lo lamento, no encuento un archivo llamado ${archivoAE} en ${carpeta}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
         }
 
         let coso = contenido.toString()
@@ -65,11 +64,11 @@ app.use((req, res, next) => {
           pythonResponse2 += data.toString()
         })
         pythonProcess2.stdout.on('end', function(){
-          fs.writeFile(ubint + iAnswer.nombreArchivos[i], coso, (err) => {
+          fs.writeFile(carpeta + archivoAE, coso, (err) => {
             if (err) throw err;
             respuesta = "Listo, ya agregamos tu pedido al texto"
           })
         })
       })
-    }
+    
   }
