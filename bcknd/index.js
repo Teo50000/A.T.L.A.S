@@ -3,6 +3,7 @@
 import express from 'express';
 import fs from 'fs';
 import { spawn } from 'child_process';
+import manejoarch from './manejoarchivos';
 
 const app = express();
 app.use(express.json());
@@ -15,17 +16,28 @@ app.use((req, res, next) => {
 	next();
   });
 
-  let txtEnvio = ""
   let iAnswer = {
     pedido: "",
     nombreArchivos: [],
     tipoArchivos: "",
-    ubicacion: "",
+    ubicacion_es: [],
     txtAIngrsr: "",
+  }
+  
+  let iAnswerTipo = {
+    pedido: "",
+    terminacion: [],
+    ubicacion_es: [],
+    ubicacion_es2: [],
+    fecha: "",
+    condicion_es: []
   }
   let ubint = ""
   let respuesta = ""
   let funcionAplicar
+
+
+
   app.post('/echo', (req, res) => {
     // spawn recibe el comando a ejecutar y los argumentos, es similar a utilizar desde línea de comandos "python script_python.py"
 	const pythonProcess = spawn('python', ['python.py'])
@@ -41,17 +53,33 @@ app.use((req, res, next) => {
 	pythonProcess.stdout.on('end', function() {
 		 // Ahora parseamos el JSON completo
 		 const parsed = JSON.parse(pythonResponse);
-
-		 // Ejemplo: supongamos que el Python envía un objeto
+    if(parsed.nombreodeterminante === "nombre"){
 		iAnswer = parsed
-
+      if(iAnswer.pedido === "cambia" || iAnswer.pedido === "elimina"){
+          if(iAnswer.pedido === "cambia"){
+            funcionAplicar = manejoarch.cambia
+          } else{
+            funcionAplicar = manejoarch.elimina
+          }
+        for(let i = 0; i < iAnswer.nombreArchivos.length; i++){
+          funcionAplicar(iAnswer.ubicacion_es[i], iAnswer.nombreArchivos[i]);
+        }
+      } else if(iAnswer.pedido === "copiar" || iAnswer.pedido === "mover"){
+        if(iAnswer.pedido = "copiar"){
+          funcionAplicar = manejoarch.copiar
+        } else{
+          funcionAplicar = manejoarch.mover
+        }
+        for(let i = 0; i < iAnswer.nombreArchivos.length; i++){
+          funcionAplicar(iAnswer.ubicacion_es[i], iAnswer.nombreArchivos[i], iAnswer.ubicacion_es2[i]);
+        }
+      }
+    } else if  (nombreodeterminante === "determinante"){
+      iAnswerTipo = parsed
+    }
 
     //aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; 
-    if(iAnswer.nombreArchivos[0] != null){
-      for(let i = 0; i < nombreArchivos.lenght; i++){
-        funcionAplicar(iAnswer.ubicacion, iAnswer.nombreArchivos[i])
-      }
-    }
+    
 
   })
 
@@ -60,74 +88,4 @@ app.use((req, res, next) => {
 	pythonProcess.stdin.write(req.body.prompt)
 	// .stdin.end(): Indica al subproceso que el envío de datos finalizó para que pueda ejecutar sus acciones
 	pythonProcess.stdin.end()
-
-  
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  function cambia (carpeta, archivoAC){
-      fs.readFile(carpeta + archivoAC, (err, contenido) =>{
-        if(err){
-          respuesta =  `Lo lamento, no encuento un archivo llamado ${archivoAC} en ${carpeta}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
-          return;
-        }
-
-        let coso = contenido.toString()
-        const pythonProcess2 = spawn('python', ['python.py'])
-        let pythonResponse2 = ""
-        pythonProcess2.stdout.on('data', function(data) {
-          pythonResponse2 += data.toString()
-        })
-        pythonProcess2.stdout.on('end', function(){
-          fs.writeFile(carpeta + archivoAC, coso, (err) => {
-            if (err) throw err;
-            respuesta = "Listo, ya agregamos tu pedido al texto"
-          })
-        })
-      })
-  }
-function elimina (carpeta, archivoAE){
-  fs.unlink(carpeta + archivoAE, (err) =>{
-    if(err){
-      respuesta = `Lo lamentamos, el archivo que desea eliminar no existe. Intenta ver si esta en otra carpeta o posee un nombre similar`
-      return;
-    }
-    respuesta = `${archivoAE} fue eliminado exitosamente.`
-  })
-}
-function copiar (carpetaVieja, carpetaNueva, archivoACo){
-  let coso = ""
-  fs.readFile(carpetaVieja + archivoACo, (err, contenido) =>{
-    if(err){
-      respuesta = `Lo lamentamos, el archivo al que desea aplicarle la operacion no existe, revisa si se encuentra en otra carpeta o si tiene un nombre similar`
-      return;
-    }
-    coso = contenido.toString()
-  })
-  fs.writeFile(carpetaNueva + archivoACo, coso, (err) =>{
-    if (err) throw err;
-  console.log("¡Completado!");
-  });
-}
-function mover (carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM){
-  copiar(carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM, (err) => {
-    if (err) {
-      console.log("Error en copiar:", err.message);
-      return; // 🚨 No seguimos si copiar falla
-    }
-    elimina(origen, archivo); // solo se llama si copiar tuvo éxito
-  });
-}
