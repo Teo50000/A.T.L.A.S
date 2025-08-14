@@ -54,7 +54,7 @@ app.use((req, res, next) => {
   function cambia (carpeta, archivoAC){
       fs.readFile(carpeta + archivoAC, (err, contenido) =>{
         if(err){
-          respuesta =  `Lo lamento, no encuento un archivo llamado ${archivoAE} en ${carpeta}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
+          respuesta =  `Lo lamento, no encuento un archivo llamado ${archivoAC} en ${carpeta}. ¿Tal vez esta en otro lado? ¿Tal vez tiene un nombre similar? `
           return;
         }
 
@@ -96,6 +96,11 @@ function copiar (carpetaVieja, carpetaNueva, archivoACo){
   });
 }
 function mover (carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM){
-  copiar(carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM);
-  elimina(carpetadelaquehayquesacar, archivoAM)
+  copiar(carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM, (err) => {
+    if (err) {
+      console.log("Error en copiar:", err.message);
+      return; // 🚨 No seguimos si copiar falla
+    }
+    elimina(origen, archivo); // solo se llama si copiar tuvo éxito
+  });
 }

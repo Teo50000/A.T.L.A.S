@@ -3,7 +3,7 @@ import json
 import sys
 # sys.stdin: Utilizado para ingreso interactivo de datos
 # sys.stdin.readline(): Lee el contenido ingresado hasta que encuentra el carácter de salto de línea, o sea, hasta que se presiona saltar.
-nombre = sys.stdin.readline()
+nombre = sys.stdin.read()
 # print(): Imprime datos en pantalla. Cuando Python es ejecutado como un subproceso, envía los datos al programa que invocó a Python.
 c = "hola" + nombre
 
