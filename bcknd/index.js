@@ -77,8 +77,6 @@ app.use((req, res, next) => {
     } else if  (nombreodeterminante === "determinante"){
       iAnswerTipo = parsed
     }
-
-    //aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; 
     
 
   })

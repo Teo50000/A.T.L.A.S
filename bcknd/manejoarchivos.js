@@ -60,6 +60,17 @@ copiar(carpetadelaquehayquesacar, carpetaenlaquehayqueponer, archivoAM, (err) =>
 });
 }
 
+// investigar fs.readdir
+const buscNombre = function (params) {
+    
+}
+const buscTipo = function (params){
+
+}
+
+
+
+
 const manejoarch = {
     cambia,
     elimina,
