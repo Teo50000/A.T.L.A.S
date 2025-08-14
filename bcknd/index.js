@@ -18,12 +18,14 @@ app.use((req, res, next) => {
   let txtEnvio = ""
   let iAnswer = {
     pedido: "",
-    nombreArchivos: "",
-    ubicacion_es: "",
+    nombreArchivos: [],
+    tipoArchivos: "",
+    ubicacion: "",
     txtAIngrsr: "",
   }
   let ubint = ""
   let respuesta = ""
+  let funcionAplicar
   app.post('/echo', (req, res) => {
     // spawn recibe el comando a ejecutar y los argumentos, es similar a utilizar desde línea de comandos "python script_python.py"
 	const pythonProcess = spawn('python', ['python.py'])
@@ -42,6 +44,15 @@ app.use((req, res, next) => {
 
 		 // Ejemplo: supongamos que el Python envía un objeto
 		iAnswer = parsed
+
+
+    //aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; aca empieza el manejo de archivos; 
+    if(iAnswer.nombreArchivos[0] != null){
+      for(let i = 0; i < nombreArchivos.lenght; i++){
+        funcionAplicar(iAnswer.ubicacion, iAnswer.nombreArchivos[i])
+      }
+    }
+
   })
 
     	// stdin: Se encarga del ingreso de datos al stdin del subproceso. En este caso, envía datos del subproceso de Python.
@@ -49,7 +60,23 @@ app.use((req, res, next) => {
 	pythonProcess.stdin.write(req.body.prompt)
 	// .stdin.end(): Indica al subproceso que el envío de datos finalizó para que pueda ejecutar sus acciones
 	pythonProcess.stdin.end()
+
+  
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   function cambia (carpeta, archivoAC){
       fs.readFile(carpeta + archivoAC, (err, contenido) =>{
