@@ -4,7 +4,7 @@ import { spawn } from 'child_process';
 
 const app = express();
 app.use(express.json());
-
+let respuesta = ""
 
 const cambia = function (carpeta, archivoAC){
     fs.readFile(carpeta + archivoAC, (err, contenido) =>{
@@ -75,6 +75,7 @@ const manejoarch = {
     cambia,
     elimina,
     copiar,
-    mover
+    mover,
+    respuesta
 }
 export default manejoarch;

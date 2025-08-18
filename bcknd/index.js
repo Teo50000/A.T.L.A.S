@@ -33,7 +33,6 @@ app.use((req, res, next) => {
     condicion_es: []
   }
   let ubint = ""
-  let respuesta = ""
   let funcionAplicar
 
 
@@ -65,7 +64,7 @@ app.use((req, res, next) => {
           funcionAplicar(iAnswer.ubicacion_es[i], iAnswer.nombreArchivos[i]);
         }
       } else if(iAnswer.pedido === "copiar" || iAnswer.pedido === "mover"){
-        if(iAnswer.pedido = "copiar"){
+        if(iAnswer.pedido === "copiar"){
           funcionAplicar = manejoarch.copiar
         } else{
           funcionAplicar = manejoarch.mover
@@ -74,7 +73,7 @@ app.use((req, res, next) => {
           funcionAplicar(iAnswer.ubicacion_es[i], iAnswer.nombreArchivos[i], iAnswer.ubicacion_es2[i]);
         }
       }
-    } else if  (nombreodeterminante === "determinante"){
+    } else if  (parsed.nombreodeterminante === "determinante"){
       iAnswerTipo = parsed
     }
     
@@ -86,4 +85,5 @@ app.use((req, res, next) => {
 	pythonProcess.stdin.write(req.body.prompt)
 	// .stdin.end(): Indica al subproceso que el envío de datos finalizó para que pueda ejecutar sus acciones
 	pythonProcess.stdin.end()
+  res.send(manejoarch.respuesta)
   });
