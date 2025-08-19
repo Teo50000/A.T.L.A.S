@@ -30,7 +30,7 @@ const cambia = function (carpeta, archivoAC){
 const elimina = function (carpeta, archivoAE){
 fs.unlink(carpeta + archivoAE, (err) =>{
   if(err){
-    respuesta = `Lo lamentamos, el archivo que desea eliminar no existe. Intenta ver si esta en otra carpeta o posee un nombre similar`
+    console.log(err)
     return;
   }
   respuesta = `${archivoAE} fue eliminado exitosamente.`
@@ -40,7 +40,7 @@ const copiar = function (carpetaVieja, carpetaNueva, archivoACo){
     let coso = ""
     fs.readFile(carpetaVieja + archivoACo, (err, contenido) =>{
         if(err){
-            respuesta = `Lo lamentamos, el archivo al que desea aplicarle la operacion no existe, revisa si se encuentra en otra carpeta o si tiene un nombre similar`
+            console.log(err)
             return;
         }
         coso = contenido.toString()

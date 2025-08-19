@@ -3,7 +3,7 @@
 import express from 'express';
 import fs from 'fs';
 import { spawn } from 'child_process';
-import manejoarch from './manejoarchivos';
+import manejoarch from './manejoarchivos.js';
 
 const app = express();
 app.use(express.json());
@@ -39,8 +39,8 @@ app.use((req, res, next) => {
 
   app.post('/echo', (req, res) => {
     // spawn recibe el comando a ejecutar y los argumentos, es similar a utilizar desde línea de comandos "python script_python.py"
-	const pythonProcess = spawn('python', ['python.py'])
-	let pythonResponse = ""
+	  const pythonProcess = spawn('python', ['python.py'])
+	  let pythonResponse = ""
 
 
     // stdout: Se encarga de la salida de datos del stdout del subproceso. En este caso, recibe datos del subproceso de Python.
@@ -87,3 +87,13 @@ app.use((req, res, next) => {
 	pythonProcess.stdin.end()
   res.send(manejoarch.respuesta)
   });
+let a = {
+  pedido: "elimina",
+  nombreArchivos: ["baba", "cece"],
+  tipoArchivos: ".py",
+  ubicacion_es: ["../../../", "../../../../Downloads/"],
+  txtAIngrsr: "",
+}
+for(let i = 0; i < a.nombreArchivos.length; i++){
+  manejoarch.elimina(a.ubicacion_es[i], a.nombreArchivos[i] + a.tipoArchivos);
+}
