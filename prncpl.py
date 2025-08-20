@@ -1,7 +1,12 @@
 import os
 def crea(txtAgregar, archivo):
-    with open(archivo, 'x') as e:
-        e.write(txtAgregar)
+    try:
+        with open(archivo, 'x') as e:
+            e.write(txtAgregar)
+    except ValueError:
+        print("txtAgregar no es texto")
+    except FileExistsError:
+        print(f"El archivo {archivo} ya existe")
 
 def  modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, lineaDespues):
     nts = ""
@@ -38,6 +43,6 @@ def copiar(archivo, nuevaUbicacion):
 def mover(archivoM, nuevaUbicacionM):
     copiar(archivoM, nuevaUbicacionM)
     eliminARchivo(archivoM)
-x = input("que archivo desea mover? ")
-y = input("donde lo quiere poner? ")
-copiar(x, y)
+x = input("con que texto lo desea crear? ")
+y = input("cual es su url ")
+crea(x, y)
