@@ -5,10 +5,12 @@ def crea(txtAgregar, archivo):
             e.write(txtAgregar)
     except ValueError:
         print("txtAgregar no es texto")
+        return
     except FileExistsError:
         print(f"El archivo {archivo} ya existe")
+        return
 
-def  modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, lineaDespues):
+def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, lineaDespues):
     nts = ""
     dsps = ""
     if(lineaAntes == True):
@@ -16,19 +18,27 @@ def  modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, line
     if(lineaDespues == True):
         dsps = "\n"
     chueco = ""
+    if not (isinstance(lineaAntes, bool) or isinstance(ineaDespues, bool)):
+        print("Lineantes o LineaDespues no son bool")
+        return
     try:
         with open(archivo, 'r') as e:
             chueco = e.read()
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-    except UnicodeDecodeError:
-        print(f"El archivo {archivo} no es de texto")
+        return
+    except ValueError:
+        print(ValueError)
+        return
     ubccionmbr = chueco.find(ubicacionenArchivo)
-    before =  chueco[:ubccionmbr + len(ubicacionenArchivo)].strip()
-    after = chueco[ubccionmbr + len(ubicacionenArchivo):].strip()
-    
-    with open(archivo, 'r+') as f:
-        f.write(before + nts + txtAgregar + dsps + after)
+    if(ubccionmbr != -1):
+        before =  chueco[:ubccionmbr + len(ubicacionenArchivo)].strip()
+        after = chueco[ubccionmbr + len(ubicacionenArchivo):].strip()
+        
+        with open(archivo, 'r+') as f:
+            f.write(before + nts + txtAgregar + dsps + after)
+    else:
+        print("\n No exite esa parte del texto \n")
 
 def eliminARchivo (archivo):
     if(os.path.exists(archivo)):
