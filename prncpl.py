@@ -16,8 +16,13 @@ def  modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, line
     if(lineaDespues == True):
         dsps = "\n"
     chueco = ""
-    with open(archivo, 'r') as e:
-        chueco = e.read()
+    try:
+        with open(archivo, 'r') as e:
+            chueco = e.read()
+    except FileNotFoundError:
+        print(f"El archivo {archivo} no existe")
+    except UnicodeDecodeError:
+        print(f"El archivo {archivo} no es de texto")
     ubccionmbr = chueco.find(ubicacionenArchivo)
     before =  chueco[:ubccionmbr + len(ubicacionenArchivo)].strip()
     after = chueco[ubccionmbr + len(ubicacionenArchivo):].strip()
@@ -43,6 +48,7 @@ def copiar(archivo, nuevaUbicacion):
 def mover(archivoM, nuevaUbicacionM):
     copiar(archivoM, nuevaUbicacionM)
     eliminARchivo(archivoM)
-x = input("con que texto lo desea crear? ")
-y = input("cual es su url ")
-crea(x, y)
+x = input("que texto desea agregar? ")
+y = input("como se llama el archivo? ")
+z = input("en que parte? donde dice que?")
+modificaDondedice(x, y, z, False, False)
