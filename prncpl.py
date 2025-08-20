@@ -26,5 +26,18 @@ def eliminARchivo (archivo):
     else:
         print("\n jaja no existeeeeee el archivo ese tuyo\n \n ")
 
-x = input("que archivo desea elimiar? ")
-eliminARchivo(x)
+def copiar(archivo, nuevaUbicacion):
+    chueco = ""
+    posicioNombre = archivo.rfind("/")
+    nombre = archivo[posicioNombre + 1:].strip()
+    with open(archivo, 'r') as e:
+        chueco = e.read()
+    with open(nuevaUbicacion + nombre, 'x') as f:
+        f.write(chueco)
+
+def mover(archivoM, nuevaUbicacionM):
+    copiar(archivoM, nuevaUbicacionM)
+    eliminARchivo(archivoM)
+x = input("que archivo desea mover? ")
+y = input("donde lo quiere poner? ")
+copiar(x, y)
