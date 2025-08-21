@@ -73,16 +73,10 @@ def encontrartipoencarpeta(terminacion, carpeta):
             posicioNombre = nombres[i].rfind(".")
             if(nombres[i][posicioNombre:].strip() == terminacion):
                 nombresTrmncion.append(nombres[i])
+        if(nombresTrmncion == []):
+            print("No se ha encontrado ningun archivo con el nombre deseado")
         return nombresTrmncion
     except FileNotFoundError:
         print("La carpeta que busca no existe")
     except ValueError:
         print(ValueError)
-
-x = input("Que terminaciones quiere agarrar? ")
-y = input("De que carpeta? ")
-z = input("que les desea agregar al final? ")
-a = encontrartipoencarpeta(x, y)
-for i in range(len(a)):
-    with open(a[i], 'a') as arch:
-        arch.write("\n" + z)
