@@ -16,7 +16,7 @@ app = Flask(__name__)
 CORS(app)
 @app.route("/prompt", methods=["POST"])
 def consiguePromt():
-    prompt = request.get.json()
+    prompt = request.get_json()
     interpreta(prompt)
     
 
@@ -47,7 +47,7 @@ def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
     if(lineaDespues == True):
         dsps = "\n"
     chueco = ""
-    if not (isinstance(lineaAntes, bool) or isinstance(ineaDespues, bool)):
+    if not (isinstance(lineaAntes, bool) or isinstance(lineaDespues, bool)):
         print("Lineantes o LineaDespues no son bool")
         return
     try:
@@ -61,8 +61,8 @@ def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
         return
     ubccionmbr = chueco.find(ubicacionenArchivo)
     if(ubccionmbr != -1):
-        before =  chueco[:ubccionmbr + len(ubicacionenArchivo)].strip()
-        after = chueco[ubccionmbr + len(ubicacionenArchivo):].strip()
+        before =  chueco[:ubccionmbr + len(ubicacionenArchivo)]
+        after = chueco[ubccionmbr + len(ubicacionenArchivo):]
         
         with open(archivo, 'r+') as f:
             f.write(before + nts + txtAgregar + dsps + after)
@@ -78,7 +78,7 @@ def eliminARchivo (archivo):
 def copiar(archivo, nuevaUbicacion):
     chueco = ""
     posicioNombre = archivo.rfind("/")
-    nombre = archivo[posicioNombre + 1:].strip()
+    nombre = archivo[posicioNombre + 1:]
     try:
         with open(archivo, 'r') as e:
             chueco = e.read()
@@ -100,7 +100,7 @@ def encontrartipoencarpeta(terminacion, carpeta):
         nombresTrmncion = []
         for i in range(len(nombres)):
             posicioNombre = nombres[i].rfind(".")
-            if(nombres[i][posicioNombre:].strip() == terminacion):
+            if(nombres[i][posicioNombre:] == terminacion):
                 nombresTrmncion.append(nombres[i])
         if(nombresTrmncion == []):
             print("No se ha encontrado ningun archivo con el nombre deseado")
@@ -114,13 +114,28 @@ compatible = False
 
 def terminacionCompatible(archivo):
     a = archivo.rfind(".")
-    terminacion = archivo[a + 1:].strip()
+    terminacion = archivo[a + 1:]
     compatible = False
     for i in range(len(listerminaciones)):
         if(terminacion == listerminaciones[i]):
-            compatible == True
+            compatible = True
     return compatible
-
+    
+"""
+Ejemplo de modificar donde dice
+x = input("que desea agregar? ")
+y = input("en que archivo? ")
+z = input("donde dice que? ")
+a = input("quiere un salto de linea antes? ")
+A = False
+if(a == "si"):
+    A = True
+b = input("quiere un salto de linea al final? ")
+B = False
+if(b == "si"):
+    B = True
+modificaDondedice(x, y, z, A, B)
+"""
 
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
