@@ -80,3 +80,14 @@ def encontrartipoencarpeta(terminacion, carpeta):
         print("La carpeta que busca no existe")
     except ValueError:
         print(ValueError)
+listerminaciones = []
+compatible = False
+def terminacionCompatible(archivo):
+    try:
+        a = archivo.rfind(".")
+        terminacion = archivo[a + 1:].strip()
+        compatible = False
+        for i in range(len(listerminaciones)):
+            if(terminacion == listerminaciones[i]):
+                compatible == True
+        return compatible
