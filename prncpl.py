@@ -50,15 +50,39 @@ def copiar(archivo, nuevaUbicacion):
     chueco = ""
     posicioNombre = archivo.rfind("/")
     nombre = archivo[posicioNombre + 1:].strip()
-    with open(archivo, 'r') as e:
-        chueco = e.read()
-    with open(nuevaUbicacion + nombre, 'x') as f:
-        f.write(chueco)
+    try:
+        with open(archivo, 'r') as e:
+            chueco = e.read()
+    except FileNotFoundError:
+        print("\n No existe el archivo indicado")
+    try:
+        with open(nuevaUbicacion + nombre, 'x') as f:
+            f.write(chueco)
+    except FileExistsError:
+        print("\n La copia que desea generar ya existe")
 
 def mover(archivoM, nuevaUbicacionM):
     copiar(archivoM, nuevaUbicacionM)
     eliminARchivo(archivoM)
-x = input("que texto desea agregar? ")
-y = input("como se llama el archivo? ")
-z = input("en que parte? donde dice que?")
-modificaDondedice(x, y, z, False, False)
+
+def encontrartipoencarpeta(terminacion, carpeta):
+    try:
+        nombres = os.listdir(carpeta)
+        nombresTrmncion = []
+        for i in range(len(nombres)):
+            posicioNombre = nombres[i].rfind(".")
+            if(nombres[i][posicioNombre:].strip() == terminacion):
+                nombresTrmncion.append(nombres[i])
+        return nombresTrmncion
+    except FileNotFoundError:
+        print("La carpeta que busca no existe")
+    except ValueError:
+        print(ValueError)
+
+x = input("Que terminaciones quiere agarrar? ")
+y = input("De que carpeta? ")
+z = input("que les desea agregar al final? ")
+a = encontrartipoencarpeta(x, y)
+for i in range(len(a)):
+    with open(a[i], 'a') as arch:
+        arch.write("\n" + z)
