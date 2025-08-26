@@ -160,7 +160,9 @@ def encontrarPorNombre(archivo):
 x = input("Que archivo queres modificar? ")
 y = input("Que le quieres sacar? ")
 z = encontrarPorNombre(x)
+w = input("Que desea agregar en su lugar? ")
 print(z)
+modificaDondedice(w, z, y, False, False)
 sacarLoQueDice(z, y)
 """
 Ejemplo de modificar donde dice
