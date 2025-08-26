@@ -25,7 +25,7 @@ modificaDondedice(x, y, z, A, B)
 """
 x = input("Que archivo queres modificar? ")
 y = input("Que le quieres sacar? ")
-z = encontrarPorNombre(x)
+z = encontrArchPorNombre(x)
 w = input("Que desea agregar en su lugar? ")
 print(z)
 modificaDondedice(w, z, y, False, False)
