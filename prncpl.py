@@ -1,3 +1,4 @@
+
 import os
 
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
@@ -18,7 +19,7 @@ CORS(app)
 def consiguePromt():
     prompt = request.get_json()
     interpreta(prompt)
-    
+ 
 
 def interpreta(prompt):
     #interpretacion
@@ -68,6 +69,29 @@ def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
             f.write(before + nts + txtAgregar + dsps + after)
     else:
         print("\n No exite esa parte del texto \n")
+        return
+
+def sacarLoQueDice(archivo, ubicacionenArchivo):
+    try:
+        cocos = ""
+        with open(archivo, 'r') as e:
+            cocos = e.read()
+    except FileNotFoundError:
+        print(f"El archivo {archivo} no existe")
+        return
+    except ValueError:
+        print(ValueError)
+        return 
+    ubccionmbr = cocos.find(ubicacionenArchivo)
+    if(ubccionmbr != -1):
+        before = cocos[:ubccionmbr]
+        after = cocos[ubccionmbr + len(ubicacionenArchivo):]
+        
+        with open(archivo, 'r+') as f:
+            f.write(before + after)
+    else:
+        print("\n En ningun lado el archivo dice eso \n")
+        return
 
 def eliminARchivo (archivo):
     if(os.path.exists(archivo)):
@@ -142,3 +166,4 @@ if __name__ == "__main__":
     # debug=True recarga el servidor al detectar cambios y muestra trazas de error legibles.
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
+
