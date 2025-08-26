@@ -64,17 +64,19 @@ def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
         before =  chueco[:ubccionmbr + len(ubicacionenArchivo)]
         after = chueco[ubccionmbr + len(ubicacionenArchivo):]
         
-        with open(archivo, 'r+') as f:
+        with open(archivo, 'w') as f:
             f.write(before + nts + txtAgregar + dsps + after)
     else:
         print("\n No exite esa parte del texto \n")
         return
 
 def sacarLoQueDice(archivo, ubicacionenArchivo):
+    print(f"intentando sacar {ubicacionenArchivo} de {archivo}")
     try:
         cocos = ""
         with open(archivo, 'r') as e:
             cocos = e.read()
+            print(cocos)
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
         return
@@ -82,12 +84,16 @@ def sacarLoQueDice(archivo, ubicacionenArchivo):
         print(ValueError)
         return 
     ubccionmbr = cocos.find(ubicacionenArchivo)
+    print(ubccionmbr)
     if(ubccionmbr != -1):
         before = cocos[:ubccionmbr]
         after = cocos[ubccionmbr + len(ubicacionenArchivo):]
-        
-        with open(archivo, 'r+') as f:
+        print(before)
+        print(after)
+        print("solo hace falta reescribir el archivo")
+        with open(archivo, 'w') as f:
             f.write(before + after)
+            print("listo")
     else:
         print("\n En ningun lado el archivo dice eso \n")
         return
@@ -149,9 +155,13 @@ def encontrarPorNombre(archivo):
      for (root,dirs,files) in os.walk('C:\\', topdown=True):
         for i in range(len(files)):
              if(files[i] == archivo):
-                print(os.path.join(root, files[i]))
+                return os.path.join(root, files[i])
 
-encontrarPorNombre()
+x = input("Que archivo queres modificar? ")
+y = input("Que le quieres sacar? ")
+z = encontrarPorNombre(x)
+print(z)
+sacarLoQueDice(z, y)
 """
 Ejemplo de modificar donde dice
 x = input("que desea agregar? ")
