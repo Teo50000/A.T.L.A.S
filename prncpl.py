@@ -1,6 +1,5 @@
-
 import os
-
+"""
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
 # y jsonify para devolver respuestas en formato JSON fácilmente.
 from flask import Flask, request, jsonify
@@ -24,7 +23,7 @@ def consiguePromt():
 def interpreta(prompt):
     #interpretacion
     print("algo")
-
+"""
 
 """
 Funciones de manejo de archivos:
@@ -144,7 +143,15 @@ def terminacionCompatible(archivo):
         if(terminacion == listerminaciones[i]):
             compatible = True
     return compatible
-    
+
+
+def encontrarPorNombre(archivo):
+     for (root,dirs,files) in os.walk('C:\\', topdown=True):
+        for i in range(len(files)):
+             if(files[i] == archivo):
+                print(os.path.join(root, files[i]))
+
+encontrarPorNombre()
 """
 Ejemplo de modificar donde dice
 x = input("que desea agregar? ")
@@ -160,10 +167,11 @@ if(b == "si"):
     B = True
 modificaDondedice(x, y, z, A, B)
 """
-
+"""
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
     # debug=True recarga el servidor al detectar cambios y muestra trazas de error legibles.
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
+"""
 
