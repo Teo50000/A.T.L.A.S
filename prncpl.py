@@ -70,6 +70,8 @@ def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
         print("\n No exite esa parte del texto \n")
         return
 
+
+
 def sacarLoQueDice(archivo, ubicacionenArchivo):
     print(f"intentando sacar {ubicacionenArchivo} de {archivo}")
     try:
@@ -122,6 +124,9 @@ def copiar(archivo, nuevaUbicacion):
 def mover(archivoM, nuevaUbicacionM):
     copiar(archivoM, nuevaUbicacionM)
     eliminARchivo(archivoM)
+def reemplazar(archivoR, txtViejo, txtNuevo):
+    modificaDondedice(txtNuevo, archivoR, txtViejo, False, False)
+    sacarLoQueDice(archivoR, txtViejo)
 
 def encontrartipoencarpeta(terminacion, carpeta):
     try:
@@ -164,7 +169,7 @@ def encontrarCarPorNombre(carpeta):
                 return os.path.join(root, dirs[i])
 
 def terminacionEnDisco(terminacion):
-    rutas = []
+    rutas: list[str] = []
     for (root,dirs,files) in os.walk('C:\\', topdown=True):
         for i in range(len(files)):
             posicioNombre = files[i].rfind(".")
@@ -174,10 +179,21 @@ def terminacionEnDisco(terminacion):
         print(f"no se encontró ningún archivo tipo {terminacion}")
     else:
         return(rutas)
+a = input("que archivo desea modificar? ")
+x = input("que desea sacar? ")
+y = input("que desea poner en su lugar? ")
+reemplazar(a, x, y)
+#variables para que el back sepa que hacer
+functionToBeDone = None
+identificadorArch1 = "" #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch2 = "" #en caso de involucrar un segundo archivo
+identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "" #en caso de involucrar 2 carpetas
+txt1 = "" #en caso de involucrar un texto, se usara este
+txt2 = "" #en caso de involucrar 2, este tambien
+lineaAntes = ""
+lineaDespues = ""
 
-
-x = input("que terminacion queres buscar? ")
-print(terminacionEnDisco(x))
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
