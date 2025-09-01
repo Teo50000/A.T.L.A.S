@@ -162,8 +162,22 @@ def encontrarCarPorNombre(carpeta):
         for i in range(len(dirs)):
             if(dirs[i] == carpeta):
                 return os.path.join(root, dirs[i])
-x = input("que carpeta queres buscar? ")
-print(encontrarCarPorNombre(x))
+
+def terminacionEnDisco(terminacion):
+    rutas = []
+    for (root,dirs,files) in os.walk('C:\\', topdown=True):
+        for i in range(len(files)):
+            posicioNombre = files[i].rfind(".")
+            if(files[i][posicioNombre:] == terminacion):
+                rutas.append(os.path.join(root, files[i]))
+    if(rutas == []):
+        print(f"no se encontró ningún archivo tipo {terminacion}")
+    else:
+        return(rutas)
+
+
+x = input("que terminacion queres buscar? ")
+print(terminacionEnDisco(x))
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
