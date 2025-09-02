@@ -19,11 +19,15 @@ def consiguePromt():
     prompt = request.get_json()
     interpreta(prompt)
  
+"""
 
 def interpreta(prompt):
     #interpretacion
-    print("algo")
-"""
+    if(identificadorArch1[0] == "."):
+        if(walk == True):
+            walkCarp(identificadorCarp1)
+
+
 
 """
 Funciones de manejo de archivos:
@@ -179,18 +183,18 @@ def terminacionEnDisco(terminacion):
         print(f"no se encontró ningún archivo tipo {terminacion}")
     else:
         return(rutas)
-a = input("que archivo desea modificar? ")
-x = input("que desea sacar? ")
-y = input("que desea poner en su lugar? ")
-reemplazar(a, x, y)
+
+
 #variables para que el back sepa que hacer
 functionToBeDone = None
+srcc = False            #¿el src esta completo o no?
 identificadorArch1 = "" #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
 txt1 = "" #en caso de involucrar un texto, se usara este
 txt2 = "" #en caso de involucrar 2, este tambien
+walk = False
 lineaAntes = ""
 lineaDespues = ""
 
