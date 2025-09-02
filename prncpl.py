@@ -23,9 +23,41 @@ def consiguePromt():
 
 def interpreta(prompt):
     #interpretacion
+    archivo_s = []
+    if(identificadorCarp1 != "" and identificadorCarp1[0] != "C"):
+        identificadorCarp1 = encontrarCarPorNombre(identificadorCarp1)
+    if(identificadorCarp2 != "" and identificadorCarp2[0] != "C"):
+        identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
+
     if(identificadorArch1[0] == "."):
         if(walk == True):
-            walkCarp(identificadorCarp1)
+            archivo_s = walkCarp(identificadorArch1, identificadorCarp1)
+        else:
+            archivo_s = encontrartipoencarpeta(identificadorArch1, identificadorCarp1)
+    elif(identificadorArch1[0] != "C"):
+        archivo_s = encontrArchPorNombre(identificadorArch1)
+    x = len(archivo_s)
+    if(functionToBeDone == "crea"):
+        for i in range(x):
+            crea(txt1, archivo_s[i])
+    elif(functionToBeDone == "modificaDondedice"):
+        for i in range(x):
+            modificaDondedice(txt2, archivo_s[i],  txt1, lineaAntes, lineaDespues)
+    elif(functionToBeDone == "sacarLoQueDice"):
+        for i in range(x):
+            sacarLoQueDice(archivo_s[i], txt1)
+    elif(functionToBeDone == "reemplazar"):
+        for i in range(x):
+            reemplazar(txt2, archivo_s[i], txt1)
+    elif(functionToBeDone == "eliminARchivo"):
+        for i in range(x):
+            eliminARchivo(archivo_s[i])
+    elif(functionToBeDone == "copiar"):
+        for  i in range(x):
+            copiar(archivo_s[i], identificadorCarp1)
+    elif(functionToBeDone == "mover"):
+        for i in  range(x)::
+            mover(archivo_s[i], identificadorCarp1)
 
 
 
@@ -104,6 +136,10 @@ def sacarLoQueDice(archivo, ubicacionenArchivo):
         print("\n En ningun lado el archivo dice eso \n")
         return
 
+def reemplazar(txtNuevo, archivoR, txtViejo):
+    modificaDondedice(txtNuevo, archivoR, txtViejo, False, False)
+    sacarLoQueDice(archivoR, txtViejo)
+
 def eliminARchivo (archivo):
     if(os.path.exists(archivo)):
         os.remove(archivo)
@@ -128,9 +164,6 @@ def copiar(archivo, nuevaUbicacion):
 def mover(archivoM, nuevaUbicacionM):
     copiar(archivoM, nuevaUbicacionM)
     eliminARchivo(archivoM)
-def reemplazar(archivoR, txtViejo, txtNuevo):
-    modificaDondedice(txtNuevo, archivoR, txtViejo, False, False)
-    sacarLoQueDice(archivoR, txtViejo)
 
 def encontrartipoencarpeta(terminacion, carpeta):
     try:
@@ -164,7 +197,7 @@ def encontrArchPorNombre(archivo):
      for (root,dirs,files) in os.walk('C:\\', topdown=True):
         for i in range(len(files)):
              if(files[i] == archivo):
-                return os.path.join(root, files[i])
+                return [os.path.join(root, files[i])]
 
 def encontrarCarPorNombre(carpeta):
     for(root, dirs, files) in os.walk('C:\\', topdown=True):
