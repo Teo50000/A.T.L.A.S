@@ -197,9 +197,9 @@ def encontrarCarPorNombre(carpeta):
             if(dirs[i] == carpeta):
                 return os.path.join(root, dirs[i])
 
-def terminacionEnDisco(terminacion):
+def walkCarp(terminacion, carpeta):
     rutas: list[str] = []
-    for (root,dirs,files) in os.walk('C:\\', topdown=True):
+    for (root,dirs,files) in os.walk(carpeta, topdown=True):
         for i in range(len(files)):
             posicioNombre = files[i].rfind(".")
             if(files[i][posicioNombre:] == terminacion):
@@ -220,16 +220,18 @@ identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
 txt1 = "" #en caso de involucrar un texto, se usara este
 txt2 = "" #en caso de involucrar 2, este tambien
-walk = False
+walk = False #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = ""
 lineaDespues = ""
 
-"""
-x = input("que deseas agregar? ")
-y = input("en que archivo? ")
-z = input("que quieres sacar?" )
-reemplazar(x, y, z)
-"""
+
+x = input("que deseas terminacion queres ver? ")
+y = input("en que carpeta? ")
+a = walkCarp(x, y)
+for i in range(len(a)):
+    with open(a[i], 'a') as e:
+        a[i].write("#mamamasaani")
+
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
