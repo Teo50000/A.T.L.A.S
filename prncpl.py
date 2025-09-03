@@ -29,7 +29,7 @@ def interpreta(prompt):
     if(identificadorCarp2 != "" and identificadorCarp2[0] != "C"):
         identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
 
-    if(identificadorArch1[0] == "."):
+    if(srcca == False):
         if(walk == True):
             archivo_s = walkCarp(identificadorArch1, identificadorCarp1)
         else:
@@ -212,7 +212,8 @@ def terminacionEnDisco(terminacion):
 
 #variables para que el back sepa que hacer
 functionToBeDone = None
-srcc = False            #¿el src esta completo o no?
+srccc = False           #¿el src de la carpeta esta completo o no?
+srcca = False           #¿el src de la carpeta esta completo o no?
 identificadorArch1 = "" #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
