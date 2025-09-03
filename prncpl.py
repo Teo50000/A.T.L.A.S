@@ -224,10 +224,12 @@ walk = False
 lineaAntes = ""
 lineaDespues = ""
 
+"""
+x = input("que deseas agregar? ")
 y = input("en que archivo? ")
 z = input("que quieres sacar?" )
-sacarLoQueDice(y, z)
-
+reemplazar(x, y, z)
+"""
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
