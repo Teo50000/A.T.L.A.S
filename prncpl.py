@@ -56,7 +56,7 @@ def interpreta(prompt):
         for  i in range(x):
             copiar(archivo_s[i], identificadorCarp1)
     elif(functionToBeDone == "mover"):
-        for i in  range(x)::
+        for i in  range(x):
             mover(archivo_s[i], identificadorCarp1)
 
 
@@ -95,13 +95,10 @@ def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
     except ValueError:
         print(ValueError)
         return
-    ubccionmbr = chueco.find(ubicacionenArchivo)
-    if(ubccionmbr != -1):
-        before =  chueco[:ubccionmbr + len(ubicacionenArchivo)]
-        after = chueco[ubccionmbr + len(ubicacionenArchivo):]
-        
+    a = chueco.replace(ubicacionenArchivo,nts + ubicacionenArchivo + txtAgregar + dsps) 
+    if(a != chueco):   
         with open(archivo, 'w') as f:
-            f.write(before + nts + txtAgregar + dsps + after)
+            f.write(a)
     else:
         print("\n No exite esa parte del texto \n")
         return
@@ -121,16 +118,11 @@ def sacarLoQueDice(archivo, ubicacionenArchivo):
     except ValueError:
         print(ValueError)
         return 
-    ubccionmbr = cocos.find(ubicacionenArchivo)
+    ubccionmbr = cocos.replace(ubicacionenArchivo, "")
     print(ubccionmbr)
-    if(ubccionmbr != -1):
-        before = cocos[:ubccionmbr]
-        after = cocos[ubccionmbr + len(ubicacionenArchivo):]
-        print(before)
-        print(after)
-        print("solo hace falta reescribir el archivo")
+    if(ubccionmbr != cocos):
         with open(archivo, 'w') as f:
-            f.write(before + after)
+            f.write(ubccionmbr)
             print("listo")
     else:
         print("\n En ningun lado el archivo dice eso \n")
@@ -230,6 +222,10 @@ txt2 = "" #en caso de involucrar 2, este tambien
 walk = False
 lineaAntes = ""
 lineaDespues = ""
+
+y = input("en que archivo? ")
+z = input("que quieres sacar?" )
+sacarLoQueDice(y, z)
 
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
