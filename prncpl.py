@@ -21,24 +21,52 @@ def consiguePromt():
  
 """
 
+#variables para que el back sepa que hacer
+functionToBeDone = "crea"
+srccc = True           #¿el src de la carpeta esta completo o no?
+ntpo = True         #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = "papa.txt" #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch2 = "" #en caso de involucrar un segundo archivo
+identificadorCarp1 = "A.T.L.A.S" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "" #en caso de involucrar 2 carpetas
+txt1 = "papapapappa" #en caso de involucrar un texto, se usara este
+txt2 = "" #en caso de involucrar 2, este tambien
+walk = False #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
+lineaAntes = ""
+lineaDespues = ""
+
 def interpreta(prompt):
     #interpretacion
+    global identificadorCarp1, identificadorCarp2, identificadorArch1, identificadorArch2
+    print("dd")
     archivo_s = []
     if(identificadorCarp1 != "" and identificadorCarp1[0] != "C"):
+        print("ayudaaaaaaaa")
         identificadorCarp1 = encontrarCarPorNombre(identificadorCarp1)
+        print("carpeta 1 identificada")
+        print(identificadorCarp1)
     if(identificadorCarp2 != "" and identificadorCarp2[0] != "C"):
         identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
 
-    if(srcca == False):
+    if(ntpo == False):
         if(walk == True):
             archivo_s = walkCarp(identificadorArch1, identificadorCarp1)
+            print("linea 54")
+            print(archivo_s)
         else:
             archivo_s = encontrartipoencarpeta(identificadorArch1, identificadorCarp1)
-    elif(identificadorArch1[0] != "C"):
+            print("linea 58")
+            print(archivo_s)
+    elif(identificadorArch1[0] != "C" and functionToBeDone != "crea"):
         archivo_s = encontrArchPorNombre(identificadorArch1)
-    elif:
+        print("linea 62")
+        print(archivo_s)
+    else:
         archivo_s = identificadorArch1
+        print("linea 66")
+        print(archivo_s)
     x = len(archivo_s)
+    print("identificado")
     if(functionToBeDone == "crea"):
         for i in range(x):
             crea(txt1, archivo_s[i])
@@ -212,20 +240,9 @@ def walkCarp(terminacion, carpeta):
         return(rutas)
 
 
-#variables para que el back sepa que hacer
-functionToBeDone = None
-srccc = False           #¿el src de la carpeta esta completo o no?
-ntpo = False           #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = "" #el archivo principal que sera modificado, o la forma de encontrar los archivos
-identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "" #en caso de involucrar 2 carpetas
-txt1 = "" #en caso de involucrar un texto, se usara este
-txt2 = "" #en caso de involucrar 2, este tambien
-walk = False #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
-lineaAntes = ""
-lineaDespues = ""
 
+
+interpreta("papafrita")
 
 
 """
