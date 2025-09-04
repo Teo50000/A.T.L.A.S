@@ -69,11 +69,9 @@ def crea(txtAgregar, archivo):
         with open(archivo, 'x') as e:
             e.write(txtAgregar)
     except ValueError:
-        print("txtAgregar no es texto")
-        return
+        return("Error de formato")
     except FileExistsError:
-        print(f"El archivo {archivo} ya existe")
-        return
+        return(f"El archivo {archivo} ya existe")
 
 def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, lineaDespues):
     nts = ""
@@ -84,24 +82,22 @@ def modificaDondedice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
         dsps = "\n"
     chueco = ""
     if not (isinstance(lineaAntes, bool) or isinstance(lineaDespues, bool)):
-        print("Lineantes o LineaDespues no son bool")
-        return
+        return("Lineantes o LineaDespues no son bool")
     try:
         with open(archivo, 'r') as e:
             chueco = e.read()
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-        return
+        return(f"El archivo {archivo} no existe")
     except ValueError:
-        print(ValueError)
-        return
+        return("Error de formato")
     a = chueco.replace(ubicacionenArchivo,nts + ubicacionenArchivo + txtAgregar + dsps) 
     if(a != chueco):   
         with open(archivo, 'w') as f:
             f.write(a)
     else:
-        print("\n No exite esa parte del texto \n")
-        return
+        print("No existe esa parte del texto")
+        return("No existe esa parte del texto")
 
 
 
@@ -114,19 +110,20 @@ def sacarLoQueDice(archivo, ubicacionenArchivo):
             print(cocos)
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-        return
+        return(f"El archivo {archivo} no existe")
     except ValueError:
         print(ValueError)
-        return 
+        return("Error de formato")
     ubccionmbr = cocos.replace(ubicacionenArchivo, "")
     print(ubccionmbr)
     if(ubccionmbr != cocos):
         with open(archivo, 'w') as f:
             f.write(ubccionmbr)
             print("listo")
+            return(200)
     else:
         print("\n En ningun lado el archivo dice eso \n")
-        return
+        return("En ningun lado el archivo dice eso")
 
 def reemplazar(txtNuevo, archivoR, txtViejo):
     modificaDondedice(txtNuevo, archivoR, txtViejo, False, False)
@@ -136,7 +133,8 @@ def eliminARchivo (archivo):
     if(os.path.exists(archivo)):
         os.remove(archivo)
     else:
-        print("\n jaja no existeeeeee el archivo ese tuyo\n \n ")
+        print("\n jaja no existeeeeee el archivo ese tuyo\n ")
+        return("archivo no existe")
 
 def copiar(archivo, nuevaUbicacion):
     chueco = ""
@@ -147,11 +145,13 @@ def copiar(archivo, nuevaUbicacion):
             chueco = e.read()
     except FileNotFoundError:
         print("\n No existe el archivo indicado")
+        return("no existe")
     try:
         with open(nuevaUbicacion + nombre, 'x') as f:
             f.write(chueco)
     except FileExistsError:
         print("\n La copia que desea generar ya existe")
+        return("copia preexistente")
 
 def mover(archivoM, nuevaUbicacionM):
     copiar(archivoM, nuevaUbicacionM)
@@ -225,12 +225,6 @@ lineaAntes = ""
 lineaDespues = ""
 
 
-x = input("que deseas terminacion queres ver? ")
-y = input("en que carpeta? ")
-a = walkCarp(x, y)
-for i in range(len(a)):
-    with open(a[i], 'a') as e:
-        a[i].write("#mamamasaani")
 
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
