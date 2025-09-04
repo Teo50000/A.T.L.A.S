@@ -36,6 +36,8 @@ def interpreta(prompt):
             archivo_s = encontrartipoencarpeta(identificadorArch1, identificadorCarp1)
     elif(identificadorArch1[0] != "C"):
         archivo_s = encontrArchPorNombre(identificadorArch1)
+    elif:
+        archivo_s = identificadorArch1
     x = len(archivo_s)
     if(functionToBeDone == "crea"):
         for i in range(x):
@@ -213,7 +215,7 @@ def walkCarp(terminacion, carpeta):
 #variables para que el back sepa que hacer
 functionToBeDone = None
 srccc = False           #¿el src de la carpeta esta completo o no?
-srcca = False           #¿el src de la carpeta esta completo o no?
+ntpo = False           #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch1 = "" #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
