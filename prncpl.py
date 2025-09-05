@@ -24,7 +24,7 @@ def consiguePromt():
 #variables para que el back sepa que hacer
 functionToBeDone = "sacarLoQueDice"
 srccc = True           #¿el src de la carpeta esta completo o no?
-ntpo = False         #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch1 = ["nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "C:\\" #será la carpeta en la que se encuentra en archivo
@@ -60,7 +60,7 @@ def interpreta(prompt):
             print("linea 58")
             print(archivo_s)
     elif(identificadorArch1[0] != "C" and functionToBeDone != "crea"):
-        archivo_s = encontrArchPorNombre(identificadorArch1)
+        archivo_s = encontrArchPorNombre(identificadorArch1[0])
         print("linea 62")
         print(archivo_s)
     else:
@@ -113,28 +113,14 @@ def modificaDondeDice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
         nts = " \n "
     if(lineaDespues == True):
         dsps = " \n "
-    chueco = ""
-    if not (isinstance(lineaAntes, bool) or isinstance(lineaDespues, bool)):
-        return("Lineantes o LineaDespues no son bool")
-    try:
-        with open(archivo, 'r') as e:
-            chueco = e.read()
-    except FileNotFoundError:
-        print(f"El archivo {archivo} no existe")
-        return(f"El archivo {archivo} no existe")
-    except ValueError:
-        return("Error de formato")
-    a = chueco.replace(ubicacionenArchivo, ubicacionenArchivo + nts + txtAgregar + dsps) 
-    if(a != chueco):   
-        with open(archivo, 'w') as f:
-            f.write(a)
-    else:
-        print("No existe esa parte del texto")
-        return("No existe esa parte del texto")
+    reemplazar(txtAgregar, archivo, nts + txtAgregar + dsps)
 
 
 
 def sacarLoQueDice(archivo, ubicacionenArchivo):
+    reemplazar("", archivo, ubicacionenArchivo)
+
+def reemplazar(txtNuevo, archivo, ubicacionenArchivo):
     print(f"intentando sacar {ubicacionenArchivo} de {archivo}")
     try:
         cocos = ""
@@ -147,7 +133,7 @@ def sacarLoQueDice(archivo, ubicacionenArchivo):
     except ValueError:
         print(ValueError)
         return("Error de formato")
-    ubccionmbr = cocos.replace(ubicacionenArchivo, "")
+    ubccionmbr = cocos.replace(ubicacionenArchivo, txtNuevo)
     print(ubccionmbr)
     if(ubccionmbr != cocos):
         with open(archivo, 'w') as f:
@@ -157,10 +143,6 @@ def sacarLoQueDice(archivo, ubicacionenArchivo):
     else:
         print("\n En ningun lado el archivo dice eso \n")
         return("En ningun lado el archivo dice eso")
-
-def reemplazar(txtNuevo, archivoR, txtViejo):
-    modificaDondeDice(txtNuevo, archivoR, txtViejo, False, False)
-    sacarLoQueDice(archivoR, txtViejo)
 
 def eliminARchivo (archivo):
     if(os.path.exists(archivo)):
@@ -200,6 +182,7 @@ def encontrartipoencarpeta(terminacion, carpeta):
                 nombresTrmncion.append(nombres[i])
         if(nombresTrmncion == []):
             print(f"No se ha encontrado ningun archivo con la terminacion {terminacion}")
+            return(f"No se ha encontrado ningun archivo con la terminacion {terminacion}")
         return nombresTrmncion
     except FileNotFoundError:
         print("La carpeta que busca no existe")
