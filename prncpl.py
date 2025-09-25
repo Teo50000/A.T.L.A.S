@@ -1,12 +1,5 @@
 import os
 import shutil
-
-
-
-#HAY QUE CAMBIAR LA FUNCION MOVER PARA QUE LA NUEVA UBICACION NO SEA IDENTIFICADORCARP1
-
-
-
 """
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
 # y jsonify para devolver respuestas en formato JSON fácilmente.
@@ -239,22 +232,10 @@ def walkCarp(terminacion, carpeta):
 
 def dupdic(carvieja, carnueva):
     shutil.copytree(carvieja, carnueva)
-    """
-    for(root, files, dirs) in os.walk(carvieja, topdown = True):
-        for i in range(len(dirs)):
-            a = os.path.join(root, dirs[i])
-            b = a.replace(carvieja, carnueva)
-            b = b[:b.rfind("\\")]
-            shutil.copy(a, b)
-        for i in range(len(files)):
-            a = os.path.join(root, files[i])
-            b = a.replace(carvieja, carnueva)
-            b = b[:b.rfind("\\")]
-            shutil.copy(a, b)
-        """
 def movdic(carvieja, carnueva):
     dupdic(carvieja, carnueva)
     shutil.rmtree(carvieja)
+
 interpreta("")
 
 """
