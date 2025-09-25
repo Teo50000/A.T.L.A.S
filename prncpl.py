@@ -30,13 +30,13 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-functionToBeDone = "mover"
+functionToBeDone = "movdic"
 srccc = True           #¿el src de la carpeta esta completo o no?
 ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch1 = [""] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/bcknd2" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\bcknd" #en caso de involucrar 2 carpetas
+identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/pryct" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\pyct2" #en caso de involucrar 2 carpetas
 txt1 = " con gloria " #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = ", en realidad me cae mal gloria" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
@@ -59,29 +59,29 @@ def interpreta(prompt):
         print(identificadorCarp2 + "\n")
         identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
         print(identificadorCarp2)
-
-    if(ntpo == False):
-        if(walk == True):
-            print(f"encontrando archivos tipo {identificadorArch1} en subcarpetas de {identificadorCarp1}")
-            
-            for i in range(len(identificadorArch1)):
-                papa =  walkCarp(identificadorArch1[i], identificadorCarp1)
-                for f in range(len(papa)):
-                    archivo_s.append(papa[f])
-            print("linea 54")
+    if(functionToBeDone != "dupdic"):
+        if(ntpo == False):
+            if(walk == True):
+                print(f"encontrando archivos tipo {identificadorArch1} en subcarpetas de {identificadorCarp1}")
+                
+                for i in range(len(identificadorArch1)):
+                    papa =  walkCarp(identificadorArch1[i], identificadorCarp1)
+                    for f in range(len(papa)):
+                        archivo_s.append(papa[f])
+                print("linea 54")
+            else:
+                print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
+                archivo_s = encontrartipoencarpeta(identificadorArch1[0], identificadorCarp1)
+                print("linea 58")
+        elif(identificadorArch1[0] != "C" and functionToBeDone != "crea"):
+            print(f"buscando archivos de nombre {identificadorArch1}")
+            archivo_s = encontrArchPorNombre(identificadorArch1[0])
+            print("linea 62")
         else:
-            print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
-            archivo_s = encontrartipoencarpeta(identificadorArch1[0], identificadorCarp1)
-            print("linea 58")
-    elif(identificadorArch1[0] != "C" and functionToBeDone != "crea"):
-        print(f"buscando archivos de nombre {identificadorArch1}")
-        archivo_s = encontrArchPorNombre(identificadorArch1[0])
-        print("linea 62")
-    else:
-        archivo_s = identificadorArch1
-        print("linea 66")
-    print(archivo_s)
-    x = len(archivo_s)
+            archivo_s = identificadorArch1
+            print("linea 66")
+        print(archivo_s)
+        x = len(archivo_s)
     print("identificado")
     if(functionToBeDone == "crea"):
         for i in range(x):
@@ -105,6 +105,10 @@ def interpreta(prompt):
     elif(functionToBeDone == "mover"):
         for i in  range(x):
             mover(archivo_s[i], identificadorCarp2)
+    elif(functionToBeDone == "dupdic"):
+        dupdic(identificadorCarp1, identificadorCarp2)
+    elif(functionToBeDone == "movdic"):
+        movdic(identificadorCarp1, identificadorCarp2)
 
 
 
@@ -248,8 +252,10 @@ def dupdic(carvieja, carnueva):
             b = b[:b.rfind("\\")]
             shutil.copy(a, b)
         """
-dupdic("C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\pryct", "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\pryct2")
-
+def movdic(carvieja, carnueva):
+    dupdic(carvieja, carnueva)
+    shutil.rmtree(carvieja)
+interpreta("")
 
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
