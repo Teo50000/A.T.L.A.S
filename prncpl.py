@@ -33,10 +33,10 @@ def consiguePromt():
 functionToBeDone = "mover"
 srccc = True           #¿el src de la carpeta esta completo o no?
 ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch1 = [""] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = 'pryct' #en caso de involucrar 2 carpetas
+identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/bcknd2" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\bcknd" #en caso de involucrar 2 carpetas
 txt1 = " con gloria " #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = ", en realidad me cae mal gloria" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
@@ -63,7 +63,11 @@ def interpreta(prompt):
     if(ntpo == False):
         if(walk == True):
             print(f"encontrando archivos tipo {identificadorArch1} en subcarpetas de {identificadorCarp1}")
-            archivo_s = walkCarp(identificadorArch1[0], identificadorCarp1)
+            
+            for i in range(len(identificadorArch1)):
+                papa =  walkCarp(identificadorArch1[i], identificadorCarp1)
+                for f in range(len(papa)):
+                    archivo_s.append(papa[f])
             print("linea 54")
         else:
             print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
@@ -97,10 +101,10 @@ def interpreta(prompt):
             eliminARchivo(archivo_s[i])
     elif(functionToBeDone == "copiar"):
         for  i in range(x):
-            copiar(archivo_s[i], identificadorCarp1)
+            copiar(archivo_s[i], identificadorCarp2)
     elif(functionToBeDone == "mover"):
         for i in  range(x):
-            mover(archivo_s[i], identificadorCarp1)
+            mover(archivo_s[i], identificadorCarp2)
 
 
 
@@ -163,7 +167,7 @@ def eliminARchivo (archivo):
 
 def copiar(archivo, nuevaUbicacion):
     try:
-        shutil.copy(archivoM, nuevaUbicacionM)
+        shutil.copy(archivo, nuevaUbicacion)
     except FileExistsError:
         print("Repetido")
 
@@ -221,7 +225,7 @@ def walkCarp(terminacion, carpeta):
     for (root,dirs,files) in os.walk(carpeta, topdown=True):
         for i in range(len(files)):
             posicioNombre = files[i].rfind(".")
-            if(files[i][posicioNombre:] == terminacion):
+            if(files[i][posicioNombre:] == terminacion or (terminacion == "")):
                 rutas.append(os.path.join(root, files[i]))
     if(rutas == []):
         print(f"no se encontró ningún archivo tipo {terminacion}")
