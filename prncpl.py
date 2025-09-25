@@ -234,6 +234,8 @@ def walkCarp(terminacion, carpeta):
 
 
 def dupdic(carvieja, carnueva):
+    shutil.copytree(carvieja, carnueva)
+    """
     for(root, files, dirs) in os.walk(carvieja, topdown = True):
         for i in range(len(dirs)):
             a = os.path.join(root, dirs[i])
@@ -245,6 +247,7 @@ def dupdic(carvieja, carnueva):
             b = a.replace(carvieja, carnueva)
             b = b[:b.rfind("\\")]
             shutil.copy(a, b)
+        """
 dupdic("C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\pryct", "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\pryct2")
 
 
