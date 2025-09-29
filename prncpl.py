@@ -23,15 +23,15 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-functionToBeDone = "reemplazar"
-srccc = True           #¿el src de la carpeta esta completo o no?
-ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ["C:/Users/52218824/Documents/GitHub/A.T.L.A.S/papa.txt", "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+functionToBeDone = "modificaDondeDice"
+srccc = False           #¿el src de la carpeta esta completo o no?
+ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
+identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
-txt1 = "morir" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
-txt2 = "a" #en caso de involucrar 2, este tambien
+txt1 = "salud" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt2 = ", educacion, patria, y familia" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
 lineaDespues = False
@@ -126,7 +126,7 @@ def modificaDondeDice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
         nts = " \n "
     if(lineaDespues == True):
         dsps = " \n "
-    reemplazar(txtAgregar, archivo, nts + txtAgregar + dsps)
+    reemplazar( nts + txtAgregar + dsps, archivo, ubicacionenArchivo)
 
 
 
@@ -167,12 +167,16 @@ def eliminARchivo (archivo):
 def copiar(archivo, nuevaUbicacion):
     try:
         shutil.copy(archivo, nuevaUbicacion)
+    except FileNotFoundError:
+        print("no existe archivo")
     except FileExistsError:
         print("Repetido")
 
 def mover(archivoM, nuevaUbicacionM):
     try:
         shutil.move(archivoM, nuevaUbicacionM)
+    except FileNotFoundError:
+        print("no existe archivo")
     except shutil.Error as e:
         print(f"Carpeta repetida")
     
@@ -234,9 +238,14 @@ def walkCarp(terminacion, carpeta):
 
 def dupdic(carvieja, carnueva):
     shutil.copytree(carvieja, carnueva)
+    except FileNotFoundError:
+        print("no existe archivo")
+        
 def movdic(carvieja, carnueva):
     dupdic(carvieja, carnueva)
     shutil.rmtree(carvieja)
+    except FileNotFoundError:
+        print("no existe archivo")
 
 interpreta("")
 
