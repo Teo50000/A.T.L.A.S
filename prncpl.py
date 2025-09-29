@@ -23,18 +23,18 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-functionToBeDone = "movdic"
+functionToBeDone = "reemplazar"
 srccc = True           #¿el src de la carpeta esta completo o no?
-ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = [""] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = ["C:/Users/52218824/Documents/GitHub/A.T.L.A.S/papa.txt", "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/pryct" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\pyct2" #en caso de involucrar 2 carpetas
-txt1 = " con gloria " #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
-txt2 = ", en realidad me cae mal gloria" #en caso de involucrar 2, este tambien
+identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "" #en caso de involucrar 2 carpetas
+txt1 = "morir" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt2 = "a" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
-lineaAntes = True
-lineaDespues = True
+lineaAntes = False
+lineaDespues = False
 
 def interpreta(prompt):
     #interpretacion
@@ -66,9 +66,10 @@ def interpreta(prompt):
                 print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
                 archivo_s = encontrartipoencarpeta(identificadorArch1[0], identificadorCarp1)
                 print("linea 58")
-        elif(identificadorArch1[0] != "C" and functionToBeDone != "crea"):
+        elif(srccc == False and functionToBeDone != "crea"):
             print(f"buscando archivos de nombre {identificadorArch1}")
-            archivo_s = encontrArchPorNombre(identificadorArch1[0])
+            for i in range(len(identificadorArch1)):
+                archivo_s.append(encontrArchPorNombre(identificadorArch1[i]))
             print("linea 62")
         else:
             archivo_s = identificadorArch1
@@ -87,6 +88,7 @@ def interpreta(prompt):
         for i in range(x):
             sacarLoQueDice(archivo_s[i], txt1)
     elif(functionToBeDone == "reemplazar"):
+        print("reemplazando")
         for i in range(x):
             reemplazar(txt2, archivo_s[i], txt1)
     elif(functionToBeDone == "eliminARchivo"):
