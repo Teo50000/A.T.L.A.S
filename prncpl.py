@@ -23,14 +23,15 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-functionToBeDone = "reemplazar"
+disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
+functionToBeDone = "mover"
 srccc = False         #¿el src de la carpeta esta completo o no?
 ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch1 = ["antártica_experimento.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "" #en caso de involucrar 2 carpetas
-txt1 = "Antárdida" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+identificadorCarp2 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/" #en caso de involucrar 2 carpetas
+txt1 = "AntárticaAntárticaAntárticaAntártica" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "Antártica" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
@@ -167,6 +168,9 @@ def eliminARchivo (archivo):
         return("archivo no existe")
 
 def copiar(archivo, nuevaUbicacion):
+    if not os.path.exists(nuevaUbicacion):
+        print(f"no existe {nuevaUbicacion}")
+        return(f"no existe {nuevaUbicacion}")
     try:
         shutil.copy(archivo, nuevaUbicacion)
     except FileNotFoundError:
@@ -175,6 +179,10 @@ def copiar(archivo, nuevaUbicacion):
         print("Repetido")
 
 def mover(archivoM, nuevaUbicacionM):
+    if not os.path.exists(nuevaUbicacionM):
+        print(f"no existe {nuevaUbicacionM}")
+        return(f"no existe {nuevaUbicacionM}")
+
     try:
         shutil.move(archivoM, nuevaUbicacionM)
     except FileNotFoundError:
@@ -213,18 +221,23 @@ def terminacionCompatible(archivo):
 
 
 def encontrArchPorNombre(archivo):
-     for (root,dirs,files) in os.walk('C:\\', topdown=True):
+    global disco
+    for (root,dirs,files) in os.walk(f"{disco}:\\", topdown=True):
         for i in range(len(files)):
              if(files[i] == archivo):
                 return os.path.join(root, files[i])
 
 def encontrarCarPorNombre(carpeta):
-    for(root, dirs, files) in os.walk('C:\\', topdown=True):
+    global disco
+    for(root, dirs, files) in os.walk(f"{disco}:\\", topdown=True):
         for i in range(len(dirs)):
             if(dirs[i] == carpeta):
                 return os.path.join(root, dirs[i]) + "\\"
 
 def walkCarp(terminacion, carpeta):
+    if not os.path.exists(carpeta):
+        print(f"no existe {carpeta}")
+        return(f"no existe {carpeta}")
     carpeta = carpeta.replace("/", "\\")
     rutas: list[str] = []
     for (root,dirs,files) in os.walk(carpeta, topdown=True):
@@ -239,12 +252,24 @@ def walkCarp(terminacion, carpeta):
 
 
 def dupdic(carvieja, carnueva):
+    if not os.path.exists(carvieja):
+        print(f"no existe {carvieja}")
+        return(f"no existe {carvieja}")
+    if not os.path.exists(carnueva):
+        print(f"no existe {carnueva}")
+        return(f"no existe {carnueva}")
     try:
         shutil.copytree(carvieja, carnueva)
     except FileNotFoundError:
         print("no existe archivo")
 
 def movdic(carvieja, carnueva):
+    if not os.path.exists(carvieja):
+        print(f"no existe {carvieja}")
+        return(f"no existe {carvieja}")
+    if not os.path.exists(carnueva):
+        print(f"no existe {carnueva}")
+        return(f"no existe {carnueva}")
     try:
         dupdic(carvieja, carnueva)
         shutil.rmtree(carvieja)
