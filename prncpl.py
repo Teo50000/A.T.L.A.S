@@ -23,15 +23,15 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-functionToBeDone = "sacarLoQueDice"
-srccc = True          #¿el src de la carpeta esta completo o no?
+functionToBeDone = "reemplazar"
+srccc = False         #¿el src de la carpeta esta completo o no?
 ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ["C:/Users/52218824/Documents/GitHub/A.T.L.A.S/nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch1 = ["antártica_experimento.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
-txt1 = "aaaaaaaaaaa" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
-txt2 = "" #en caso de involucrar 2, este tambien
+txt1 = "Antárdida" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt2 = "Antártica" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
 lineaDespues = False
@@ -104,6 +104,8 @@ def interpreta(prompt):
         dupdic(identificadorCarp1, identificadorCarp2)
     elif(functionToBeDone == "movdic"):
         movdic(identificadorCarp1, identificadorCarp2)
+    elif(functionToBeDone == "buscarSRC"):
+        return(archivo_s)
 
 
 
@@ -112,7 +114,7 @@ Funciones de manejo de archivos:
 """
 def crea(txtAgregar, archivo):
     try:
-        with open(archivo, 'x') as e:
+        with open(archivo, 'x', encoding = 'utf-8') as e:
             e.write(txtAgregar)
     except ValueError:
         return("Error de formato")
@@ -137,7 +139,7 @@ def reemplazar(txtNuevo, archivo, ubicacionenArchivo):
     print(f"intentando sacar {ubicacionenArchivo} de {archivo}")
     try:
         cocos = ""
-        with open(archivo, 'r') as e:
+        with open(archivo, 'r', encoding = 'utf-8') as e:
             cocos = e.read()
             print(cocos)
     except FileNotFoundError:
@@ -149,12 +151,12 @@ def reemplazar(txtNuevo, archivo, ubicacionenArchivo):
     ubccionmbr = cocos.replace(ubicacionenArchivo, txtNuevo)
     print(ubccionmbr)
     if(ubccionmbr != cocos):
-        with open(archivo, 'w') as f:
+        with open(archivo, 'w', encoding = 'utf-8') as f:
             f.write(ubccionmbr)
             print("listo")
             return(200)
     else:
-        print("\n En ningun lado el archivo dice eso \n")
+        print(f"\n En ningun lado el archivo dice eso {ubicacionenArchivo}\n")
         return("En ningun lado el archivo dice eso")
 
 def eliminARchivo (archivo):
@@ -214,7 +216,7 @@ def encontrArchPorNombre(archivo):
      for (root,dirs,files) in os.walk('C:\\', topdown=True):
         for i in range(len(files)):
              if(files[i] == archivo):
-                return [os.path.join(root, files[i])]
+                return os.path.join(root, files[i])
 
 def encontrarCarPorNombre(carpeta):
     for(root, dirs, files) in os.walk('C:\\', topdown=True):
@@ -249,7 +251,7 @@ def movdic(carvieja, carnueva):
     except FileNotFoundError:
         print("no existe archivo")
 
-interpreta("")
+print(interpreta(""))
 
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
