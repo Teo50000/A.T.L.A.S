@@ -1,5 +1,8 @@
 import os
 import shutil
+
+#pip install fpdf==1.7
+from fpdf import fpdf
 """
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
 # y jsonify para devolver respuestas en formato JSON fácilmente.
@@ -24,15 +27,15 @@ def consiguePromt():
 
 #variables para que el back sepa que hacer
 disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "mover"
+functionToBeDone = "reemplazar"
 srccc = False         #¿el src de la carpeta esta completo o no?
-ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ["antártica_experimento.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/" #en caso de involucrar 2 carpetas
-txt1 = "AntárticaAntárticaAntárticaAntártica" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
-txt2 = "Antártica" #en caso de involucrar 2, este tambien
+identificadorCarp1 = "A.T.L.A.S" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S" #en caso de involucrar 2 carpetas
+txt1 = "a" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt2 = "YZ" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
 lineaDespues = False
@@ -276,7 +279,24 @@ def movdic(carvieja, carnueva):
     except FileNotFoundError:
         print("no existe archivo")
 
-print(interpreta(""))
+
+class PDF(FPDF):
+    def text(self):
+        a = ""
+        with open("C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\antártica_experimento.txt", 'rb') as e:
+            a = e.read()
+        self.set_xy(10.0,80.0)
+        self.set_text_color(76.0, 32.0, 250.0)
+        self.set_font('Arial', '', 12)
+        self.multi_cell(0,10,txt)
+
+def creaPDF():
+    pdf = PDF()
+    pdf.add_page()
+    pdf.text()
+    pdf.set_autor('AA')
+    pdf.output('test.pdf', 'F')
+creaPDF()
 
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
