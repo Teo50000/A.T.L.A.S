@@ -1,8 +1,13 @@
 import os
 import shutil
 
-#pip install fpdf==1.7
-from fpdf import fpdf
+
+
+from pypdf import PdfReader
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+
 """
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
 # y jsonify para devolver respuestas en formato JSON fácilmente.
@@ -279,25 +284,53 @@ def movdic(carvieja, carnueva):
     except FileNotFoundError:
         print("no existe archivo")
 
+def leer(archivo):
+    try:
+        cocos = ""
+        with open(archivo, 'r', encoding = 'utf-8') as e:
+            cocos = e.read()
+            return(cocos)
+    except FileNotFoundError:
+        print(f"El archivo {archivo} no existe")
+        return(f"El archivo {archivo} no existe")
+    except ValueError:
+        print(ValueError)
+        return("Error de formato")
 
-class PDF(FPDF):
-    def text(self):
-        a = ""
-        with open("C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\antártica_experimento.txt", 'rb') as e:
-            a = e.read()
-        self.set_xy(10.0,80.0)
-        self.set_text_color(76.0, 32.0, 250.0)
-        self.set_font('Arial', '', 12)
-        self.multi_cell(0,10,txt)
+def pdf(text, nombre):
+    # Crear un documento PDF nuevo
+    nombre = nombre + ".pdf"
+    doc = SimpleDocTemplate(nombre, pagesize=letter)
 
-def creaPDF():
-    pdf = PDF()
-    pdf.add_page()
-    pdf.text()
-    pdf.set_autor('AA')
-    pdf.output('test.pdf', 'F')
-creaPDF()
+    # Estilos para el párrafo
+    styles = getSampleStyleSheet()
+    style = styles["Normal"]
 
+    # Reemplazar saltos de línea con etiquetas HTML para que se respeten
+    # (Paragraph interpreta el texto como HTML-lite)
+    if text:
+        text = text.replace('\n', '<br/>')
+        text = text.replace('   ', '   aqui iba un tab     ')  # HTML-safe espacio
+    else:
+        text = "No hay texto"
+
+    # Crear contenido
+    content = []
+    content.append(Paragraph(text, style))
+    content.append(Spacer(1, 12))  # Espacio opcional entre párrafos
+
+    # Construir el PDF
+    doc.build(content)
+
+    print(f"PDF creado: {nombre}")
+
+
+def archivoAaPDF(archivo, nuevoNombre):
+    texto = leer(archivo)
+    pdf(texto, nuevoNombre)
+
+
+archivoAaPDF("./baladanobel.txt", "why_to_her")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
