@@ -32,18 +32,22 @@ def consiguePromt():
 
 #variables para que el back sepa que hacer
 disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "reemplazar"
-srccc = False         #¿el src de la carpeta esta completo o no?
-ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+functionToBeDone = "archivoAaPDF"
+srccc = False        #¿el src de la carpeta esta completo o no?
+ntpo = False       #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = [".js"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "A.T.L.A.S" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S" #en caso de involucrar 2 carpetas
+identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "" #en caso de involucrar 2 carpetas
 txt1 = "a" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "YZ" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
 lineaDespues = False
+#esta se usa solo en archivoAaPDF y PDFaarchivo
+nombres = []   #no usar variable a menos que sea estrictamente necesario
+replicar = True
+terminacion = ".js"
 
 def interpreta(prompt):
     #interpretacion
@@ -75,7 +79,7 @@ def interpreta(prompt):
                 print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
                 archivo_s = encontrartipoencarpeta(identificadorArch1[0], identificadorCarp1)
                 print("linea 58")
-        elif(srccc == False and functionToBeDone != "crea"):
+        elif(srccc == False and (functionToBeDone != "crea" or functionToBeDone != "pdf")):
             print(f"buscando archivos de nombre {identificadorArch1}")
             for i in range(len(identificadorArch1)):
                 archivo_s.append(encontrArchPorNombre(identificadorArch1[i]))
@@ -87,6 +91,9 @@ def interpreta(prompt):
         x = len(archivo_s)
     print("identificado")
     if(functionToBeDone == "crea"):
+        for i in range(x):
+            crea(txt1, archivo_s[i], identificadorCarp1)
+    elif(functionToBeDone == "pdf"):
         for i in range(x):
             crea(txt1, archivo_s[i])
     elif(functionToBeDone == "modificaDondeDice"):
@@ -115,6 +122,28 @@ def interpreta(prompt):
         movdic(identificadorCarp1, identificadorCarp2)
     elif(functionToBeDone == "buscarSRC"):
         return(archivo_s)
+    elif(functionToBeDone == "archivoAaPDF"):
+        if(replicar == True):
+            for i in range(x):
+                rew = archivo_s[i]
+                ultimaBarra = rew.rfind("\\")
+                nombrigual = rew[ultimaBarra+2: - len(terminacion)]
+                rutigual = rew[:ultimaBarra+2]
+                archivoAaPDF(rew, nombrigual, rutigual)
+        else:
+            for i in  range(x):
+                archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
+    elif(functionToBeDone == "PDFaTexto"):
+        if(replicar == True):
+            for i in range(x):
+                rew = archivo_s[i]
+                ultimaBarra = rew.rfind("\\")
+                nombrigual = rew[ultimaBarra+2: - 4] + terminacion
+                rutigual = rew[:ultimaBarra+2]
+                PDFaTexto(rew, nombrigual, rutigual)
+        else:
+            for i in  range(x):
+                archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
 
 
 
@@ -300,7 +329,7 @@ def leer(archivo):
         return("Error de formato")
 
 def pdf(text, nombre, ruta):
-    # Crear un documento PDF nuevo
+    # Crear un documento PD F nuevo
     nombre = ruta + nombre + ".pdf"
     doc = SimpleDocTemplate(nombre, pagesize=letter)
 
@@ -342,7 +371,7 @@ def PDFaTexto(pdf, nuevoNombre, ruta):
     texto = leerPDF(pdf)
     crea(texto, ruta + nuevoNombre)
 
-archivoAaPDF("nobel.txt", "baladaNobel.pdf", "../")
+interpreta("AYUDA")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
