@@ -134,10 +134,12 @@ def modificaDondeDice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, linea
     nts = ""
     dsps = ""
     if(lineaAntes == True):
-        nts = " \n "
+        nts = " \n"
+        print(nts)
+        print("texto:" + nts + txtAgregar)
     if(lineaDespues == True):
-        dsps = " \n "
-    reemplazar( nts + ubicacionenArchivo + txtAgregar + dsps, archivo, ubicacionenArchivo)
+        dsps = "\n "
+    reemplazar( ubicacionenArchivo + nts + txtAgregar + dsps, archivo, ubicacionenArchivo)
 
 
 
@@ -297,9 +299,9 @@ def leer(archivo):
         print(ValueError)
         return("Error de formato")
 
-def pdf(text, nombre):
+def pdf(text, nombre, ruta):
     # Crear un documento PDF nuevo
-    nombre = nombre + ".pdf"
+    nombre = ruta + nombre + ".pdf"
     doc = SimpleDocTemplate(nombre, pagesize=letter)
 
     # Estilos para el párrafo
@@ -310,7 +312,7 @@ def pdf(text, nombre):
     # (Paragraph interpreta el texto como HTML-lite)
     if text:
         text = text.replace('\n', '<br/>')
-        text = text.replace('   ', '   aqui iba un tab     ')  # HTML-safe espacio
+        text = text.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')  # HTML-safe espacio
     else:
         text = "No hay texto"
 
@@ -325,12 +327,22 @@ def pdf(text, nombre):
     print(f"PDF creado: {nombre}")
 
 
-def archivoAaPDF(archivo, nuevoNombre):
+def archivoAaPDF(archivo, nuevoNombre, ruta):
     texto = leer(archivo)
-    pdf(texto, nuevoNombre)
+    pdf(texto, nuevoNombre, ruta)
 
+def leerPDF(archivo):
+    reader = PdfReader(archivo)
+    number_of_pages = len(reader.pages)
+    page = reader.pages[0]
+    text = page.extract_text()
+    return text
 
-archivoAaPDF("./baladanobel.txt", "why_to_her")
+def PDFaTexto(pdf, nuevoNombre, ruta):
+    texto = leerPDF(pdf)
+    crea(texto, ruta + nuevoNombre)
+
+archivoAaPDF("nobel.txt", "baladaNobel.pdf", "../")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
