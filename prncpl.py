@@ -376,7 +376,17 @@ def PDFaTexto(pdf, nuevoNombre, ruta):
     texto = leerPDF(pdf)
     crea(texto, ruta + nuevoNombre)
 
-PDFaTexto("nose.pdf", "papa.txt", "./")
+def renombrar(archV, nuevoNombre):
+    archV.replace("/", "\\")
+    ultBar = archV.rfind("\\")
+    nuevoNombre = archV[:ultBar + 1] + nuevoNombre
+    if(os.path.exists(nuevoNombre)):
+        print("no se puede")
+        return("ya existe")
+    os.rename(archV, nuevoNombre)
+    print(nuevoNombre)
+
+renombrar("C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\Nauru.txt", "papa.txt")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
