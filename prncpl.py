@@ -35,7 +35,7 @@ disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se p
 functionToBeDone = "archivoAaPDF"
 srccc = False        #¿el src de la carpeta esta completo o no?
 ntpo = False       #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = [".js"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
@@ -47,7 +47,7 @@ lineaDespues = False
 #esta se usa solo en archivoAaPDF y PDFaarchivo
 nombres = []   #no usar variable a menos que sea estrictamente necesario
 replicar = True
-terminacion = ".js"
+terminacion = ".txt"
 
 def interpreta(prompt):
     #interpretacion
@@ -157,6 +157,7 @@ def crea(txtAgregar, archivo):
     except ValueError:
         return("Error de formato")
     except FileExistsError:
+        print(f"El archivo {archivo} ya existe")
         return(f"El archivo {archivo} ya existe")
 
 def modificaDondeDice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, lineaDespues):
@@ -331,6 +332,9 @@ def leer(archivo):
 def pdf(text, nombre, ruta):
     # Crear un documento PD F nuevo
     nombre = ruta + nombre + ".pdf"
+    if(os.path.exists(nombre)):
+        print("ya existe")
+        return("Ya existe")
     doc = SimpleDocTemplate(nombre, pagesize=letter)
 
     # Estilos para el párrafo
@@ -372,7 +376,7 @@ def PDFaTexto(pdf, nuevoNombre, ruta):
     texto = leerPDF(pdf)
     crea(texto, ruta + nuevoNombre)
 
-interpreta("AYUDA")
+PDFaTexto("nose.pdf", "papa.txt", "./")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
