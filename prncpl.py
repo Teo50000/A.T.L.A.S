@@ -144,6 +144,8 @@ def interpreta(prompt):
         else:
             for i in  range(x):
                 archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
+    elif(functionToBeDone == "renombrar"):
+        renombrar(archivo_s[i], identificadorArch2)
 
 
 
@@ -367,8 +369,9 @@ def archivoAaPDF(archivo, nuevoNombre, ruta):
 def leerPDF(archivo):
     reader = PdfReader(archivo)
     number_of_pages = len(reader.pages)
-    page = reader.pages[0]
-    text = page.extract_text()
+    text = ""
+    for i in range(number_of_pages):
+        text = text + reader.pages[i].extract_text()
     print(text)
     return text
 
@@ -386,7 +389,7 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-renombrar("C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\Nauru.txt", "papa.txt")
+PDFaTexto("../../introduccion_a_la_economia.pdf", "felicidad.txt", "../")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
