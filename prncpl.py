@@ -326,10 +326,10 @@ def leer(archivo):
             return(cocos)
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-        return(f"El archivo {archivo} no existe")
+        return(FileNotFoundError)
     except ValueError:
         print(ValueError)
-        return("Error de formato")
+        return(ValueErrorr)
 
 def pdf(text, nombre, ruta):
     # Crear un documento PD F nuevo
@@ -372,6 +372,7 @@ def leerPDF(archivo):
     text = ""
     for i in range(number_of_pages):
         text = text + reader.pages[i].extract_text()
+        
     print(text)
     return text
 
@@ -389,7 +390,113 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-PDFaTexto("../../introduccion_a_la_economia.pdf", "felicidad.txt", "../")
+pdf("""
+🎼 Balada de Petro: “Por qué no yo, Nobel traicionero”
+
+Balada lenta, tono nostálgico, mezcla de ego herido y crítica geopolítica.
+
+Estrofa 1
+
+En la Casa de Nariño, solo y pensativo,
+mira al cielo Petro, el pecho compasivo.
+Un titular retumba en su corazón:
+“María Corina, Nobel por la Nación”.
+
+Estrofa 2
+
+Se alzó la derecha, con premios y flores,
+mientras él hablaba de paz y dolores.
+“¿Y mi lucha por el clima, por los pobres,
+no vale más que sus discursos de oradores?”
+
+Estribillo (x2)
+
+🎶 Ay Nobel traicionero, ¿qué fue lo que viste?
+¿No viste a un hombre que al mundo resiste?
+Puse el petróleo a juicio, paré el motor,
+pero premias al norte y niegas mi ardor. 🎶
+
+Estrofa 3
+
+“¿Será que mi tono, mi verbo profundo,
+no les gustó tanto en el primer mundo?
+Hablo de imperios, de Wall Street y fuego…
+María Corina, ¿qué hizo, sin despegar un ruego?”
+
+Estrofa 4
+
+Citó a Bolívar, a Marx y a Galeano,
+marchó con el pueblo, alzó su mano.
+“Yo soy la voz del sur global, herido,
+pero me ignoran como si no hubiera nacido…”
+
+Estribillo (x2)
+
+🎶 Ay Nobel esquivo, juez del hemisferio,
+¿acaso molesta mi tono sincero?
+Premias al drama, la foto, el disfraz,
+y no ves al hombre que detuvo al gas. 🎶
+
+Cierre (con aire melancólico)
+
+Petro suspira, con la mirada lejana:
+“Quizá en otra vida, en otra mañana.
+Mientras tanto, que celebren los fríos,
+que yo me quedo en mis sueños vacíos…”
+
+🎤 Batalla de rap: Aciculifolio vs Esclerófilo
+
+Duelo botánico feroz entre dos tipos de hoja que se enfrentan en el ring vegetal.
+Beat rápido, estilo freestyle, lleno de punchlines dendrológicos.
+
+🎙️ Round 1: Aciculifolio (el pino, el elegante)
+
+“Yo soy aguja fina, soy delgada y sutil,
+soporto inviernos que a ti te hacen infantil.
+Mientras tú sudas en veranos calientes,
+yo conservo el agua, hojas inteligentes.
+
+Siempre verde, siempre firme, sin caer,
+tu rigidez se parte, yo puedo sostener.
+Pino, abeto, conífera con flow,
+te dejo seco como en clima sin snow.”
+
+🎙️ Round 2: Esclerófilo (el roble, el duro)
+
+“Tú pinchas suave, yo golpeo con espesor,
+hoja coriácea, campeón del calor.
+Mediterráneo soy, roca y sol me forjaron,
+tus cloroplastos, hermano, se asustaron.
+
+Yo sí sé de estrés hídrico y de resistencia,
+mi hoja no cae con ninguna violencia.
+Tú pareces duro, pero sos de cartón,
+aciculifolio, aquí manda el campeón.”
+
+🎙️ Round 3: Aciculifolio (respuesta afilada)
+
+“Resistes calor, pero ¿y el invierno qué?
+Mientras tú te secas, yo estoy de pie.
+Clorofila eterna, hoja ninja ancestral,
+mi estoma medita, no es superficial.
+
+Tú eres grueso, pero eso no es virtud,
+te evapora el sol con total ingratitud.
+Lento pero verde, soy sabio del bosque,
+tu esclerosis no asombra, ni con enfoque.”
+
+🎙️ Round Final: Esclerófilo (remate brutal)
+
+“Hojas duras como puño de revolución,
+mi lignina golpea con precisión.
+Tus acículas finas, parecen de papel,
+yo doy sombra al mundo, tú apenas nivel.
+
+Así que pinito, regresa a tu altitud,
+aquí abajo se gana con actitud.
+Soy roble, encina, madroño y alcornoque,
+en este duelo, tú te desenfoques.”
+""", "que_cosaaa", "./")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
