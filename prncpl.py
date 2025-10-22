@@ -402,7 +402,6 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-archivoAaPDF("antártica_experimento.txt", "asdf.ASDF-ASDFGH_UYTREWS;", "./")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
