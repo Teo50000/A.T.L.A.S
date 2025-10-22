@@ -340,6 +340,11 @@ def leer(archivo):
 
 def pdf(text, nombre, ruta):
     # Crear un documento PD F nuevo
+    aVerNoPodesPonerEsosCaracteresPoneAlgoNormal = ["$", "/", ":", '"', "<", ">", "|", "?", "*", "\\"]
+    for f in range(len(aVerNoPodesPonerEsosCaracteresPoneAlgoNormal)):
+        if aVerNoPodesPonerEsosCaracteresPoneAlgoNormal[f] in nombre:
+            print("PONE UN NOMBRE NORMAL")
+            return("pone un nombnre normal")
     nombre = ruta + nombre + ".pdf"
     if(os.path.exists(nombre)):
         print("ya existe")
@@ -397,7 +402,7 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-interpreta("a")
+archivoAaPDF("antártica_experimento.txt", "asdf.ASDF-ASDFGH_UYTREWS;", "./")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
