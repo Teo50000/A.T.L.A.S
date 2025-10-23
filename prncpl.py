@@ -32,13 +32,13 @@ def consiguePromt():
 
 #variables para que el back sepa que hacer
 disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "dupdic"
+functionToBeDone = "movdic"
 srccc = True         #¿el src de la carpeta esta completo o no?
 ntpo = True    #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch1 = ["nse.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "C:/Users/52218824/Documents/Github/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "C:/Users/52218824/Downloads/" #en caso de involucrar 2 carpetas
+identificadorCarp1 = "C:/Users/52218824/Downloads/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "C:/Users/52218824/Favorites/" #en caso de involucrar 2 carpetas
 txt1 = ", educacion, patria, y familiasalud" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "salud" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
@@ -299,7 +299,7 @@ def walkCarp(terminacion, carpeta):
     if not os.path.exists(carpeta):
         print(f"no existe {carpeta}")
         raise FileNotFoundError(f"no existe {carpeta}-walkCarp")
-    carpeta = carpeta.replace("/", "\\")
+    # hacer carpeta = carpeta.replace("/", "\\") ya no hace falta
     rutas: list[str] = []
     for (root,dirs,files) in os.walk(carpeta, topdown=True):
         for i in range(len(files)):
