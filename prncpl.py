@@ -32,13 +32,13 @@ def consiguePromt():
 
 #variables para que el back sepa que hacer
 disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "reemplazar"
-srccc = False        #¿el src de la carpeta esta completo o no?
+functionToBeDone = "dupdic"
+srccc = True         #¿el src de la carpeta esta completo o no?
 ntpo = True    #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ["nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch1 = ["nse.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "C:/Users/52218824/Documents/Github/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "" #en caso de involucrar 2 carpetas
+identificadorCarp2 = "C:/Users/52218824/Downloads/" #en caso de involucrar 2 carpetas
 txt1 = ", educacion, patria, y familiasalud" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "salud" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
@@ -53,6 +53,9 @@ terminacion = ".js"
 def interpreta(prompt):
     #interpretacion
     global identificadorCarp1, identificadorCarp2, identificadorArch1, identificadorArch2
+    identificadorCarp1 = identificadorCarp1.replace("/", "\\")
+    identificadorCarp2 = identificadorCarp2.replace("/", "\\")
+    print(f"\n idenitificadorcarp1: {identificadorCarp1} \n identificadorcarp2: {identificadorCarp2} \n")
     try:
         print("dd")
         archivo_s = []
@@ -311,19 +314,26 @@ def walkCarp(terminacion, carpeta):
 
 
 def dupdic(carvieja, carnueva):
+    print(carvieja)
+    print(carnueva)
     if not os.path.exists(carvieja):
         print(f"no existe {carvieja}")
         raise FileNotFoundError(f"no existe carpeta origen {carvieja}-dupdic")
     if not os.path.exists(carnueva):
         print(f"no existe {carnueva}")
         raise FileNotFoundError(f"no existe carpeta destino {carnueva}-dupdic")
+    ultBar = carvieja.rfind("\\")
+    antultbarra = carvieja.rfind("\\", 0, ultBar)
+    nombre = carvieja[antultbarra + 1:]
+    carnueva = carnueva + nombre
+    print(carnueva)
     try:
         shutil.copytree(carvieja, carnueva)
     except FileNotFoundError:
         print("no existe archivo")
     except FileExistsError:
         print("Copia ya existe")
-        raise FileExistsError("Copia ya existente-dupdic")
+        raise 
 
 def movdic(carvieja, carnueva):
     try:
