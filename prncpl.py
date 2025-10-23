@@ -46,7 +46,7 @@ lineaAntes = False
 lineaDespues = False
 
 #esta se usa solo en archivoAaPDF y PDFaTexto
-nombres = ["hola", "adios", "REPÚBLICA DEMOCRÁTICA Y POPULAR DE COREA"]   #no usar variable a menos que sea estrictamente necesario
+nombres = ["A A A A AA", "A C I C U L I F O L I O", "E S C L E R O F I L O", "LEOLECIEELEYULAVIIIIIIIIIII", "....pdf...pdf.pdf.pdf.pdf.pdf"]   #no usar variable a menos que sea estrictamente necesario
 replicar = True
 terminacion = ".js"
 
@@ -167,10 +167,10 @@ def crea(txtAgregar, archivo):
         with open(archivo, 'x', encoding = 'utf-8') as e:
             e.write(txtAgregar)
     except ValueError:
-        return("Error de formato")
+        raise ValueError("Error de formato")
     except FileExistsError:
         print(f"El archivo {archivo} ya existe")
-        return(f"El archivo {archivo} ya existe")
+        raise FileExistsError(f"El archivo {archivo} ya existe")
 
 def modificaDondeDice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, lineaDespues):
     nts = ""
@@ -197,10 +197,10 @@ def reemplazar(txtNuevo, archivo, ubicacionenArchivo):
             print(cocos)
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-        return(f"El archivo {archivo} no existe")
+        raise FileNotFoundError(f"El archivo {archivo} no existe")
     except ValueError:
         print(ValueError)
-        return("Error de formato")
+        raise ValueError("Error de formato")
     ubccionmbr = cocos.replace(ubicacionenArchivo, txtNuevo)
     print(ubccionmbr)
     if(ubccionmbr != cocos):
@@ -210,19 +210,19 @@ def reemplazar(txtNuevo, archivo, ubicacionenArchivo):
             return(200)
     else:
         print(f"\n En ningun lado el archivo dice eso {ubicacionenArchivo}\n")
-        return("En ningun lado el archivo dice eso")
+        raise Exception("En ningun lado el archivo dice eso")
 
 def eliminARchivo (archivo):
     if(os.path.exists(archivo)):
         os.remove(archivo)
     else:
         print("\n jaja no existeeeeee el archivo ese tuyo\n ")
-        return("archivo no existe")
+        raise FileNotFoundError("archivo no existe")
 
 def copiar(archivo, nuevaUbicacion):
     if not os.path.exists(nuevaUbicacion):
         print(f"no existe {nuevaUbicacion}")
-        return(f"no existe {nuevaUbicacion}")
+        raise FileNotFoundError(f"no existe {nuevaUbicacion}")
     try:
         shutil.copy(archivo, nuevaUbicacion)
     except FileNotFoundError:
@@ -233,14 +233,16 @@ def copiar(archivo, nuevaUbicacion):
 def mover(archivoM, nuevaUbicacionM):
     if not os.path.exists(nuevaUbicacionM):
         print(f"no existe {nuevaUbicacionM}")
-        return(f"no existe {nuevaUbicacionM}")
+        raise FileNotFoundError(f"no existe {nuevaUbicacionM}")
 
     try:
         shutil.move(archivoM, nuevaUbicacionM)
     except FileNotFoundError:
         print("no existe archivo")
+        raise FileNotFoundError("No existe el archivo")
     except shutil.Error as e:
         print(f"Carpeta repetida")
+        raise shutil.Error("Carpeta repetida")
     
 
 def encontrartipoencarpeta(terminacion, carpeta):
@@ -289,7 +291,7 @@ def encontrarCarPorNombre(carpeta):
 def walkCarp(terminacion, carpeta):
     if not os.path.exists(carpeta):
         print(f"no existe {carpeta}")
-        return(f"no existe {carpeta}")
+        raise FileNotFoundError(f"no existe {carpeta}")
     carpeta = carpeta.replace("/", "\\")
     rutas: list[str] = []
     for (root,dirs,files) in os.walk(carpeta, topdown=True):
@@ -306,24 +308,25 @@ def walkCarp(terminacion, carpeta):
 def dupdic(carvieja, carnueva):
     if not os.path.exists(carvieja):
         print(f"no existe {carvieja}")
-        return(f"no existe {carvieja}")
+        raise FileNotFoundError(f"no existe {carvieja}")
     if not os.path.exists(carnueva):
         print(f"no existe {carnueva}")
-        return(f"no existe {carnueva}")
+        raise FileNotFoundError(f"no existe {carnueva}")
     try:
         shutil.copytree(carvieja, carnueva)
     except FileNotFoundError:
         print("no existe archivo")
     except FileExistsError:
         print("Copia ya existe")
+        raise FileExistsError("Copia ya existente")
 
 def movdic(carvieja, carnueva):
     if not os.path.exists(carvieja):
         print(f"no existe {carvieja}")
-        return(f"no existe {carvieja}")
+        raise FileNotFoundError(f"no existe {carvieja}")
     if not os.path.exists(carnueva):
         print(f"no existe {carnueva}")
-        return(f"no existe {carnueva}")
+         raise FileNotFoundError(f"no existe {carnueva}")
     try:
         dupdic(carvieja, carnueva)
         shutil.rmtree(carvieja)
@@ -338,10 +341,10 @@ def leer(archivo):
             return(cocos)
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-        return(FileNotFoundError)
+         raise FileNotFoundError(f"El archivo {archivo} no existe")
     except ValueError:
         print(ValueError)
-        return(ValueError)
+        raise ValueError("ValueError")
 
 def pdf(text, nombre, ruta):
     # Crear un documento PD F nuevo
@@ -349,11 +352,11 @@ def pdf(text, nombre, ruta):
     for f in range(len(aVerNoPodesPonerEsosCaracteresPoneAlgoNormal)):
         if aVerNoPodesPonerEsosCaracteresPoneAlgoNormal[f] in nombre:
             print("PONE UN NOMBRE NORMAL")
-            return("pone un nombnre normal")
+            raise ValueError("pone un nombnre normal")
     nombre = ruta + nombre + ".pdf"
     if(os.path.exists(nombre)):
         print("ya existe")
-        return("Ya existe")
+        raise FileExistsError("Ya existe")
     doc = SimpleDocTemplate(nombre, pagesize=letter)
 
     # Estilos para el párrafo
@@ -403,11 +406,11 @@ def renombrar(archV, nuevoNombre):
     nuevoNombre = archV[:ultBar + 1] + nuevoNombre
     if(os.path.exists(nuevoNombre)):
         print("no se puede")
-        return("ya existe")
+        raise FileExistsError("ya existe")
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-interpreta("ayudaaaaaaa")
+eliminARchivo("republicas democratica del congo")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
