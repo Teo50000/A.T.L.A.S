@@ -3,10 +3,10 @@ import shutil
 
 
 
-from pypdf import PdfReader
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet
+#from pypdf import PdfReader
+#from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+#from reportlab.lib.pagesizes import letter
+#from reportlab.lib.styles import getSampleStyleSheet
 
 """
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
@@ -32,15 +32,15 @@ def consiguePromt():
 
 #variables para que el back sepa que hacer
 disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "archivoAaPDF"
+functionToBeDone = "reemplazar"
 srccc = False        #¿el src de la carpeta esta completo o no?
-ntpo = False    #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = [".py"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+ntpo = True    #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = ["nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "C:/Users/52218824/Documents/Github/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "C:/Users/52218824/" #en caso de involucrar 2 carpetas
-txt1 = "—" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
-txt2 = "" #en caso de involucrar 2, este tambien
+identificadorCarp2 = "" #en caso de involucrar 2 carpetas
+txt1 = ", educacion, patria, y familiasalud" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt2 = "salud" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
 lineaDespues = False
@@ -53,109 +53,111 @@ terminacion = ".js"
 def interpreta(prompt):
     #interpretacion
     global identificadorCarp1, identificadorCarp2, identificadorArch1, identificadorArch2
-    print("dd")
-    archivo_s = []
-    if(identificadorCarp1 != "" and identificadorCarp1[0] != "C"):
-        print("encontrand carpeta por nombre")
-        identificadorCarp1 = encontrarCarPorNombre(identificadorCarp1)
-        print("carpeta 1 identificada")
-        print(identificadorCarp1)
-    else:
-        print(identificadorCarp1)
-    if(identificadorCarp2 != "" and identificadorCarp2[0] != "C"):
-        print(identificadorCarp2 + "\n")
-        identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
-        print(identificadorCarp2)
-    if(functionToBeDone != "dupdic"):
-        if(ntpo == False):
-            if(walk == True):
-                print(f"encontrando archivos tipo {identificadorArch1} en subcarpetas de {identificadorCarp1}")
-                
+    try:
+        print("dd")
+        archivo_s = []
+        if(identificadorCarp1 != "" and identificadorCarp1[0] != "C"):
+            print("encontrand carpeta por nombre")
+            identificadorCarp1 = encontrarCarPorNombre(identificadorCarp1)
+            print("carpeta 1 identificada")
+            print(identificadorCarp1)
+        else:
+            print(identificadorCarp1)
+        if(identificadorCarp2 != "" and identificadorCarp2[0] != "C"):
+            print(identificadorCarp2 + "\n")
+            identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
+            print(identificadorCarp2)
+        if(functionToBeDone != "dupdic"):
+            if(ntpo == False):
+                if(walk == True):
+                    print(f"encontrando archivos tipo {identificadorArch1} en subcarpetas de {identificadorCarp1}")
+                    
+                    for i in range(len(identificadorArch1)):
+                        papa =  walkCarp(identificadorArch1[i], identificadorCarp1)
+                        for f in range(len(papa)):
+                            archivo_s.append(papa[f])
+                    print("linea 54")
+                else:
+                    print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
+                    archivo_s = encontrartipoencarpeta(identificadorArch1[0], identificadorCarp1)
+                    if(type(archivo_s) == str):
+                        return archivo_s
+                    print("linea 58")
+            elif(srccc == False and functionToBeDone != "crea" and functionToBeDone != "pdf"):
+                print(f"buscando archivos de nombre {identificadorArch1}")
                 for i in range(len(identificadorArch1)):
-                    papa =  walkCarp(identificadorArch1[i], identificadorCarp1)
-                    for f in range(len(papa)):
-                        archivo_s.append(papa[f])
-                print("linea 54")
+                    archivo_s.append(encontrArchPorNombre(identificadorArch1[i]))
+                print("linea 62")
             else:
-                print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
-                archivo_s = encontrartipoencarpeta(identificadorArch1[0], identificadorCarp1)
-                if(type(archivo_s) == str):
-                    return archivo_s
-                print("linea 58")
-        elif(srccc == False and functionToBeDone != "crea" and functionToBeDone != "pdf"):
-            print(f"buscando archivos de nombre {identificadorArch1}")
-            for i in range(len(identificadorArch1)):
-                archivo_s.append(encontrArchPorNombre(identificadorArch1[i]))
-            print("linea 62")
-        else:
-            archivo_s = identificadorArch1
-            print("linea 66")
-        print(archivo_s)
-        x = len(archivo_s)
-    print("identificado")
-    if(functionToBeDone == "crea"):
-        for i in range(x):    
-            bienescrito = True
-            aVerNoPodesPonerEsosCaracteresPoneAlgoNormal = ["$", "/", ":", '"', "<", ">", "|", "?", "*", "\\"]
-            for f in range(len(aVerNoPodesPonerEsosCaracteresPoneAlgoNormal)):
-                if aVerNoPodesPonerEsosCaracteresPoneAlgoNormal[f] in archivo_s[i]:
-                    bienescrito = False
-            crea(txt1, identificadorCarp1 + archivo_s[i]) if  bienescrito else print("PONE UN CARACTER NORMAL")
-    elif(functionToBeDone == "pdf"):
-        for i in range(x):
-            crea(txt1, archivo_s[i])
-    elif(functionToBeDone == "modificaDondeDice"):
-        print(functionToBeDone)
-        for i in range(x):
-            modificaDondeDice(txt2, archivo_s[i],  txt1, lineaAntes, lineaDespues)
-    elif(functionToBeDone == "sacarLoQueDice"):
-        for i in range(x):
-            sacarLoQueDice(archivo_s[i], txt1)
-    elif(functionToBeDone == "reemplazar"):
-        print("reemplazando")
-        for i in range(x):
-            reemplazar(txt2, archivo_s[i], txt1)
-    elif(functionToBeDone == "eliminARchivo"):
-        for i in range(x):
-            eliminARchivo(archivo_s[i])
-    elif(functionToBeDone == "copiar"):
-        for  i in range(x):
-            copiar(archivo_s[i], identificadorCarp2)
-    elif(functionToBeDone == "mover"):
-        for i in  range(x):
-            mover(archivo_s[i], identificadorCarp2)
-    elif(functionToBeDone == "dupdic"):
-        dupdic(identificadorCarp1, identificadorCarp2)
-    elif(functionToBeDone == "movdic"):
-        movdic(identificadorCarp1, identificadorCarp2)
-    elif(functionToBeDone == "buscarSRC"):
-        return(archivo_s)
-    elif(functionToBeDone == "archivoAaPDF"):
-        if(replicar == True):
+                archivo_s = identificadorArch1
+                print("linea 66")
+            print(archivo_s)
+            x = len(archivo_s)
+        print("identificado")
+        if(functionToBeDone == "crea"):
+            for i in range(x):    
+                bienescrito = True
+                aVerNoPodesPonerEsosCaracteresPoneAlgoNormal = ["$", "/", ":", '"', "<", ">", "|", "?", "*", "\\"]
+                for f in range(len(aVerNoPodesPonerEsosCaracteresPoneAlgoNormal)):
+                    if aVerNoPodesPonerEsosCaracteresPoneAlgoNormal[f] in archivo_s[i]:
+                        bienescrito = False
+                crea(txt1, identificadorCarp1 + archivo_s[i]) if  bienescrito else print("PONE UN CARACTER NORMAL")
+        elif(functionToBeDone == "pdf"):
             for i in range(x):
-                rew = archivo_s[i]
-                ultimaBarra = rew.rfind("\\")
-                nombrigual = rew[ultimaBarra+2: - len(terminacion)]
-                rutigual = rew[:ultimaBarra+2]
-                archivoAaPDF(rew, nombrigual, rutigual)
-        else:
-            for i in  range(x):
-                archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
-    elif(functionToBeDone == "PDFaTexto"):
-        if(replicar == True):
+                crea(txt1, archivo_s[i])
+        elif(functionToBeDone == "modificaDondeDice"):
+            print(functionToBeDone)
             for i in range(x):
-                rew = archivo_s[i]
-                ultimaBarra = rew.rfind("\\")
-                nombrigual = rew[ultimaBarra+2: - 4] + terminacion
-                rutigual = rew[:ultimaBarra+2]
-                PDFaTexto(rew, nombrigual, rutigual)
-        else:
+                modificaDondeDice(txt2, archivo_s[i],  txt1, lineaAntes, lineaDespues)
+        elif(functionToBeDone == "sacarLoQueDice"):
+            for i in range(x):
+                sacarLoQueDice(archivo_s[i], txt1)
+        elif(functionToBeDone == "reemplazar"):
+            print("reemplazando")
+            for i in range(x):
+                reemplazar(txt2, archivo_s[i], txt1)
+        elif(functionToBeDone == "eliminARchivo"):
+            for i in range(x):
+                eliminARchivo(archivo_s[i])
+        elif(functionToBeDone == "copiar"):
+            for  i in range(x):
+                copiar(archivo_s[i], identificadorCarp2)
+        elif(functionToBeDone == "mover"):
             for i in  range(x):
-                archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
-    elif(functionToBeDone == "renombrar"):
-        for i in range (x):
-            renombrar(archivo_s[i], identificadorArch2)
-
+                mover(archivo_s[i], identificadorCarp2)
+        elif(functionToBeDone == "dupdic"):
+            dupdic(identificadorCarp1, identificadorCarp2)
+        elif(functionToBeDone == "movdic"):
+            movdic(identificadorCarp1, identificadorCarp2)
+        elif(functionToBeDone == "buscarSRC"):
+            return(archivo_s)
+        elif(functionToBeDone == "archivoAaPDF"):
+            if(replicar == True):
+                for i in range(x):
+                    rew = archivo_s[i]
+                    ultimaBarra = rew.rfind("\\")
+                    nombrigual = rew[ultimaBarra+2: - len(terminacion)]
+                    rutigual = rew[:ultimaBarra+2]
+                    archivoAaPDF(rew, nombrigual, rutigual)
+            else:
+                for i in  range(x):
+                    archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
+        elif(functionToBeDone == "PDFaTexto"):
+            if(replicar == True):
+                for i in range(x):
+                    rew = archivo_s[i]
+                    ultimaBarra = rew.rfind("\\")
+                    nombrigual = rew[ultimaBarra+2: - 4] + terminacion
+                    rutigual = rew[:ultimaBarra+2]
+                    PDFaTexto(rew, nombrigual, rutigual)
+            else:
+                for i in  range(x):
+                    archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
+        elif(functionToBeDone == "renombrar"):
+            for i in range (x):
+                renombrar(archivo_s[i], identificadorArch2)
+    except Exception:
+        raise
 
 
 """
@@ -167,10 +169,10 @@ def crea(txtAgregar, archivo):
         with open(archivo, 'x', encoding = 'utf-8') as e:
             e.write(txtAgregar)
     except ValueError:
-        raise ValueError("Error de formato")
+        raise ValueError("Error de formato-crea")
     except FileExistsError:
         print(f"El archivo {archivo} ya existe")
-        raise FileExistsError(f"El archivo {archivo} ya existe")
+        raise FileExistsError(f"El archivo {archivo} ya existe-crea")
 
 def modificaDondeDice(txtAgregar, archivo, ubicacionenArchivo, lineaAntes, lineaDespues):
     nts = ""
@@ -197,10 +199,10 @@ def reemplazar(txtNuevo, archivo, ubicacionenArchivo):
             print(cocos)
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-        raise FileNotFoundError(f"El archivo {archivo} no existe")
+        raise FileNotFoundError(f"El archivo {archivo} no existe-reemplazar")
     except ValueError:
         print(ValueError)
-        raise ValueError("Error de formato")
+        raise ValueError("Error de formato-reemplazar")
     ubccionmbr = cocos.replace(ubicacionenArchivo, txtNuevo)
     print(ubccionmbr)
     if(ubccionmbr != cocos):
@@ -210,39 +212,39 @@ def reemplazar(txtNuevo, archivo, ubicacionenArchivo):
             return(200)
     else:
         print(f"\n En ningun lado el archivo dice eso {ubicacionenArchivo}\n")
-        raise Exception("En ningun lado el archivo dice eso")
+        raise Exception("En ningun lado el archivo dice eso-reemplazar")
 
 def eliminARchivo (archivo):
     if(os.path.exists(archivo)):
         os.remove(archivo)
     else:
         print("\n jaja no existeeeeee el archivo ese tuyo\n ")
-        raise FileNotFoundError("archivo no existe")
+        raise FileNotFoundError("archivo no existe-eliminARchivo")
 
 def copiar(archivo, nuevaUbicacion):
     if not os.path.exists(nuevaUbicacion):
         print(f"no existe {nuevaUbicacion}")
-        raise FileNotFoundError(f"no existe {nuevaUbicacion}")
+        raise FileNotFoundError(f"no existe la ubicación {nuevaUbicacion}-copiar")
     try:
         shutil.copy(archivo, nuevaUbicacion)
     except FileNotFoundError:
-        print("no existe archivo")
+        print("no existe archivo-copiar")
     except FileExistsError:
-        print("Repetido")
+        print("Copia ya existente-copiar")
 
 def mover(archivoM, nuevaUbicacionM):
     if not os.path.exists(nuevaUbicacionM):
         print(f"no existe {nuevaUbicacionM}")
-        raise FileNotFoundError(f"no existe {nuevaUbicacionM}")
+        raise FileNotFoundError(f"no existe la nueva ubicación {nuevaUbicacionM}-mover")
 
     try:
         shutil.move(archivoM, nuevaUbicacionM)
     except FileNotFoundError:
         print("no existe archivo")
-        raise FileNotFoundError("No existe el archivo")
+        raise FileNotFoundError("No existe el archivo-mover")
     except shutil.Error as e:
         print(f"Carpeta repetida")
-        raise shutil.Error("Carpeta repetida")
+        raise shutil.Error("Carpeta repetida-mover")
     
 
 def encontrartipoencarpeta(terminacion, carpeta):
@@ -255,12 +257,14 @@ def encontrartipoencarpeta(terminacion, carpeta):
                 nombresTrmncion.append(nombres[i])
         if(nombresTrmncion == []):
             print(f"No se ha encontrado ningun archivo con la terminacion {terminacion}")
-            return(f"No se ha encontrado ningun archivo con la terminacion {terminacion}")
+            raise Exception(f"No se ha encontrado ningun archivo con la terminacion {terminacion}-encontrartipoencarpeta")
         return nombresTrmncion
     except FileNotFoundError:
         print("La carpeta que busca no existe")
+        raise FileNotFoundError("La carpeta que busca no existe-emcontrartipoencarpeta")
     except ValueError:
         print(ValueError)
+        raise ValueError("ValueError-encontrartipoencarpeta")
 listerminaciones = []
 compatible = False
 
@@ -291,7 +295,7 @@ def encontrarCarPorNombre(carpeta):
 def walkCarp(terminacion, carpeta):
     if not os.path.exists(carpeta):
         print(f"no existe {carpeta}")
-        raise FileNotFoundError(f"no existe {carpeta}")
+        raise FileNotFoundError(f"no existe {carpeta}-walkCarp")
     carpeta = carpeta.replace("/", "\\")
     rutas: list[str] = []
     for (root,dirs,files) in os.walk(carpeta, topdown=True):
@@ -301,6 +305,7 @@ def walkCarp(terminacion, carpeta):
                 rutas.append(os.path.join(root, files[i]))
     if(rutas == []):
         print(f"no se encontró ningún archivo tipo {terminacion}")
+        raise Exception(f"no se encontró ningún archivo tipo {terminacion}-walkCarp")
     else:
         return(rutas)
 
@@ -308,30 +313,24 @@ def walkCarp(terminacion, carpeta):
 def dupdic(carvieja, carnueva):
     if not os.path.exists(carvieja):
         print(f"no existe {carvieja}")
-        raise FileNotFoundError(f"no existe {carvieja}")
+        raise FileNotFoundError(f"no existe carpeta origen {carvieja}-dupdic")
     if not os.path.exists(carnueva):
         print(f"no existe {carnueva}")
-        raise FileNotFoundError(f"no existe {carnueva}")
+        raise FileNotFoundError(f"no existe carpeta destino {carnueva}-dupdic")
     try:
         shutil.copytree(carvieja, carnueva)
     except FileNotFoundError:
         print("no existe archivo")
     except FileExistsError:
         print("Copia ya existe")
-        raise FileExistsError("Copia ya existente")
+        raise FileExistsError("Copia ya existente-dupdic")
 
 def movdic(carvieja, carnueva):
-    if not os.path.exists(carvieja):
-        print(f"no existe {carvieja}")
-        raise FileNotFoundError(f"no existe {carvieja}")
-    if not os.path.exists(carnueva):
-        print(f"no existe {carnueva}")
-         raise FileNotFoundError(f"no existe {carnueva}")
     try:
         dupdic(carvieja, carnueva)
         shutil.rmtree(carvieja)
-    except FileNotFoundError:
-        print("no existe archivo")
+    except Exception:
+        raise
 
 def leer(archivo):
     try:
@@ -341,22 +340,23 @@ def leer(archivo):
             return(cocos)
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
-         raise FileNotFoundError(f"El archivo {archivo} no existe")
+        raise FileNotFoundError(f"El archivo {archivo} no existe-leer")
     except ValueError:
         print(ValueError)
-        raise ValueError("ValueError")
+        raise ValueError("ValueError-leer")
 
+"""
 def pdf(text, nombre, ruta):
     # Crear un documento PD F nuevo
     aVerNoPodesPonerEsosCaracteresPoneAlgoNormal = ["$", "/", ":", '"', "<", ">", "|", "?", "*", "\\"]
     for f in range(len(aVerNoPodesPonerEsosCaracteresPoneAlgoNormal)):
         if aVerNoPodesPonerEsosCaracteresPoneAlgoNormal[f] in nombre:
             print("PONE UN NOMBRE NORMAL")
-            raise ValueError("pone un nombnre normal")
+            raise ValueError("pone un nombnre normal - pdf")
     nombre = ruta + nombre + ".pdf"
     if(os.path.exists(nombre)):
         print("ya existe")
-        raise FileExistsError("Ya existe")
+        raise FileExistsError("Ya existe pdf-pdf")
     doc = SimpleDocTemplate(nombre, pagesize=letter)
 
     # Estilos para el párrafo
@@ -369,7 +369,7 @@ def pdf(text, nombre, ruta):
         text = text.replace('\n', '<br/>')
         text = text.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')  # HTML-safe espacio
     else:
-        text = "No hay texto"
+        raise Exception("no hay texto-pdf")
 
     # Crear contenido
     content = []
@@ -387,14 +387,19 @@ def archivoAaPDF(archivo, nuevoNombre, ruta):
     pdf(texto, nuevoNombre, ruta)
 
 def leerPDF(archivo):
-    reader = PdfReader(archivo)
-    number_of_pages = len(reader.pages)
-    text = ""
-    for i in range(number_of_pages):
-        text = text + reader.pages[i].extract_text()
-        
-    print(text)
-    return text
+    try:
+        reader = PdfReader(archivo)
+        number_of_pages = len(reader.pages)
+        text = ""
+        for i in range(number_of_pages):
+            text = text + reader.pages[i].extract_text()
+            
+        print(text)
+        return text
+    except ValueError:
+        raise ValueError("ValueError-leerPDF")
+    except FileNotFoundError:
+        raise FileNotFoundError("PDF no existente-leerPDF")
 
 def PDFaTexto(pdf, nuevoNombre, ruta):
     texto = leerPDF(pdf)
@@ -404,6 +409,8 @@ def renombrar(archV, nuevoNombre):
     archv = archV.replace("/", "\\")
     ultBar = archV.rfind("\\")
     nuevoNombre = archV[:ultBar + 1] + nuevoNombre
+    if not os.path.exists(archV):
+        raise FileNotFoundError(f"El archivo {archV} no existe-renombrar")
     if(os.path.exists(nuevoNombre)):
         print("no se puede")
         raise FileExistsError("ya existe")
@@ -412,9 +419,12 @@ def renombrar(archV, nuevoNombre):
 
 eliminARchivo("republicas democratica del congo")
 """
+"""
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
     # debug=True recarga el servidor al detectar cambios y muestra trazas de error legibles.
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
 """
+
+interpreta(5)
