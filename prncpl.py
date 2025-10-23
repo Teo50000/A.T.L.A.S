@@ -32,16 +32,16 @@ def consiguePromt():
 
 #variables para que el back sepa que hacer
 disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "sacarLoQueDice"
-srccc = True        #¿el src de la carpeta esta completo o no?
-ntpo = True      #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ["antártica_experimento.js"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+functionToBeDone = "archivoAaPDF"
+srccc = False        #¿el src de la carpeta esta completo o no?
+ntpo = False    #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = [".py"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
+identificadorCarp1 = "C:/Users/52218824/Documents/Github/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "C:/Users/52218824/" #en caso de involucrar 2 carpetas
 txt1 = "—" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "" #en caso de involucrar 2, este tambien
-walk = False #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
+walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
 lineaDespues = False
 
@@ -79,8 +79,10 @@ def interpreta(prompt):
             else:
                 print(f"encontrando archivos tipo {identificadorArch1} en {identificadorCarp1}")
                 archivo_s = encontrartipoencarpeta(identificadorArch1[0], identificadorCarp1)
+                if(type(archivo_s) == str):
+                    return archivo_s
                 print("linea 58")
-        elif(srccc == False and (functionToBeDone != "crea" or functionToBeDone != "pdf")):
+        elif(srccc == False and functionToBeDone != "crea" and functionToBeDone != "pdf"):
             print(f"buscando archivos de nombre {identificadorArch1}")
             for i in range(len(identificadorArch1)):
                 archivo_s.append(encontrArchPorNombre(identificadorArch1[i]))
@@ -151,7 +153,8 @@ def interpreta(prompt):
             for i in  range(x):
                 archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
     elif(functionToBeDone == "renombrar"):
-        renombrar(archivo_s[i], identificadorArch2)
+        for i in range (x):
+            renombrar(archivo_s[i], identificadorArch2)
 
 
 
@@ -311,6 +314,8 @@ def dupdic(carvieja, carnueva):
         shutil.copytree(carvieja, carnueva)
     except FileNotFoundError:
         print("no existe archivo")
+    except FileExistsError:
+        print("Copia ya existe")
 
 def movdic(carvieja, carnueva):
     if not os.path.exists(carvieja):
@@ -336,7 +341,7 @@ def leer(archivo):
         return(FileNotFoundError)
     except ValueError:
         print(ValueError)
-        return(ValueErrorr)
+        return(ValueError)
 
 def pdf(text, nombre, ruta):
     # Crear un documento PD F nuevo
@@ -393,7 +398,7 @@ def PDFaTexto(pdf, nuevoNombre, ruta):
     crea(texto, ruta + nuevoNombre)
 
 def renombrar(archV, nuevoNombre):
-    archV.replace("/", "\\")
+    archv = archV.replace("/", "\\")
     ultBar = archV.rfind("\\")
     nuevoNombre = archV[:ultBar + 1] + nuevoNombre
     if(os.path.exists(nuevoNombre)):
@@ -402,6 +407,7 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
+interpreta("ayudaaaaaaa")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
