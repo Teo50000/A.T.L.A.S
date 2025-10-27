@@ -3,10 +3,10 @@ import shutil
 
 
 
-#from pypdf import PdfReader
-#from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-#from reportlab.lib.pagesizes import letter
-#from reportlab.lib.styles import getSampleStyleSheet
+from pypdf import PdfReader
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
 
 """
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
@@ -435,8 +435,7 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-print(type(identificadorArch1))
-print(interpreta("Manuela Castañeda al congreso"))
+pdf("aaa", "batalla de rap demaciado random", "../../")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
