@@ -31,13 +31,13 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-disco = "C" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "sacarLoQueDice"
-srccc = True          #¿el src de la carpeta esta completo o no?
-ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ["C:/Users/52218824/Documents/GitHub/A.T.L.A.S/nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+disco = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
+functionToBeDone = "leer"
+srccc = False          #¿el src de la carpeta esta completo o no?
+ntpo = False          #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = ".txt" #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "corrupto.docx" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "C:/Users/52218824/Documents/GitHub/A.T.L.A.S/" #será la carpeta en la que se encuentra en archivo
+identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "C:/Users/52218824/Favorites/" #en caso de involucrar 2 carpetas
 txt1 = ", educacion, patria, y familiasalud" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "salud" #en caso de involucrar 2, este tambien
@@ -53,19 +53,20 @@ terminacion = ".js"
 def interpreta(prompt):
     #interpretacion
     global identificadorCarp1, identificadorCarp2, identificadorArch1, identificadorArch2
+    if(type(identificadorArch1) != 'list'): raise Exception("identificadores de archivos deben ser listas")
     identificadorCarp1 = identificadorCarp1.replace("/", "\\")
     identificadorCarp2 = identificadorCarp2.replace("/", "\\")
     print(f"\n idenitificadorcarp1: {identificadorCarp1} \n identificadorcarp2: {identificadorCarp2} \n")
     try:
         print("dd")
         archivo_s = []
-        if(identificadorCarp1 != "" and identificadorCarp1[0] != "C"):
+        if(identificadorCarp1 != "" and identificadorCarp1[1] != ":"):
             print("encontrand carpeta por nombre")
             identificadorCarp1 = encontrarCarPorNombre(identificadorCarp1)
             print("carpeta 1 identificada")
-            print(identificadorCarp1)
-        else:
-            print(identificadorCarp1)
+        elif(identificadorCarp1 == ""):
+            identificadorCarp1 = disco
+        print(identificadorCarp1)
         if(identificadorCarp2 != "" and identificadorCarp2[0] != "C"):
             print(identificadorCarp2 + "\n")
             identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
@@ -159,6 +160,13 @@ def interpreta(prompt):
         elif(functionToBeDone == "renombrar"):
             for i in range (x):
                 renombrar(archivo_s[i], identificadorArch2)
+        elif(functionToBeDone == "leer"):
+            texto = "Estos son los textos: \n"
+            for i in range(x):
+                texto = texto + archivo_s[i] + ": \n" + leer(archivo_s[i]) + "\n \n"
+            return texto
+        else:
+            raise Exception("Funcion no válida")
     except Exception:
         raise
 
@@ -355,7 +363,7 @@ def leer(archivo):
         print(ValueError)
         raise ValueError("ValueError-leer")
 
-"""
+
 def pdf(text, nombre, ruta):
     # Crear un documento PD F nuevo
     aVerNoPodesPonerEsosCaracteresPoneAlgoNormal = ["$", "/", ":", '"', "<", ">", "|", "?", "*", "\\"]
@@ -414,7 +422,7 @@ def leerPDF(archivo):
 def PDFaTexto(pdf, nuevoNombre, ruta):
     texto = leerPDF(pdf)
     crea(texto, ruta + nuevoNombre)
-"""
+
 def renombrar(archV, nuevoNombre):
     archv = archV.replace("/", "\\")
     ultBar = archV.rfind("\\")
@@ -427,6 +435,7 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
+print(interpreta("Manuela Castañeda al congreso"))
 
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
@@ -435,5 +444,3 @@ if __name__ == "__main__":
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
 """
-
-interpreta(5)
