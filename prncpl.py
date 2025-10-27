@@ -35,7 +35,7 @@ disco = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se 
 functionToBeDone = "leer"
 srccc = False          #¿el src de la carpeta esta completo o no?
 ntpo = False          #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ".txt" #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "corrupto.docx" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "C:/Users/52218824/Favorites/" #en caso de involucrar 2 carpetas
@@ -53,7 +53,7 @@ terminacion = ".js"
 def interpreta(prompt):
     #interpretacion
     global identificadorCarp1, identificadorCarp2, identificadorArch1, identificadorArch2
-    if(type(identificadorArch1) != 'list'): raise Exception("identificadores de archivos deben ser listas")
+    if(type(identificadorArch1) != list): raise Exception("identificadores de archivos deben ser listas")
     identificadorCarp1 = identificadorCarp1.replace("/", "\\")
     identificadorCarp2 = identificadorCarp2.replace("/", "\\")
     print(f"\n idenitificadorcarp1: {identificadorCarp1} \n identificadorcarp2: {identificadorCarp2} \n")
@@ -435,8 +435,8 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
+print(type(identificadorArch1))
 print(interpreta("Manuela Castañeda al congreso"))
-
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
