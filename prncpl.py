@@ -31,8 +31,8 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-disco1 = "Z:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-disco2 = "Z:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
+disco1 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
+disco2 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
 functionToBeDone = "archivoAaPDF"
 srccc = False          #¿el src de la carpeta esta completo o no?
 ntpo = False          #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
@@ -47,8 +47,8 @@ lineaAntes = False
 lineaDespues = False
 
 #esta se usa solo en archivoAaPDF y PDFaTexto
-nombres = ["A A A A AA", "A C I C U L I F O L I O", "E S C L E R O F I L O", "LEOLECIEELEYULAVIIIIIIIIIII", "....pdf...pdf.pdf.pdf.pdf.pdf"]   #no usar variable a menos que sea estrictamente necesario
-replicar = True
+nombres = ["A A :A A AA", "A C I :C U L I F O L I O", "E S C L E R O: F I L O", "LEOLECIEELEYULAVIIIIIIII*..III", "....pdf...pdf.pdf.pdf.pdf.pdf" + '"']   #no usar variable a menos que sea estrictamente necesario
+replicar = False
 terminacion = ".txt"
 
 def interpreta(prompt):
