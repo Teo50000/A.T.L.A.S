@@ -31,14 +31,15 @@ def consiguePromt():
 """
 
 #variables para que el back sepa que hacer
-disco = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "leer"
+disco1 = "Z:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
+disco2 = "Z:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
+functionToBeDone = "archivoAaPDF"
 srccc = False          #¿el src de la carpeta esta completo o no?
 ntpo = False          #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "corrupto.docx" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "" #será la carpeta en la que se encuentra en archivo
-identificadorCarp2 = "C:/Users/52218824/Favorites/" #en caso de involucrar 2 carpetas
+identificadorCarp1 = "Z:/2025/back avanzado/" #será la carpeta en la que se encuentra en archivo
+identificadorCarp2 = "" #en caso de involucrar 2 carpetas
 txt1 = ", educacion, patria, y familiasalud" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "salud" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
@@ -48,7 +49,7 @@ lineaDespues = False
 #esta se usa solo en archivoAaPDF y PDFaTexto
 nombres = ["A A A A AA", "A C I C U L I F O L I O", "E S C L E R O F I L O", "LEOLECIEELEYULAVIIIIIIIIIII", "....pdf...pdf.pdf.pdf.pdf.pdf"]   #no usar variable a menos que sea estrictamente necesario
 replicar = True
-terminacion = ".js"
+terminacion = ".txt"
 
 def interpreta(prompt):
     #interpretacion
@@ -67,7 +68,7 @@ def interpreta(prompt):
         elif(identificadorCarp1 == ""):
             identificadorCarp1 = disco
         print(identificadorCarp1)
-        if(identificadorCarp2 != "" and identificadorCarp2[0] != "C"):
+        if(identificadorCarp2 != "" and identificadorCarp2[1] != ":"):
             print(identificadorCarp2 + "\n")
             identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
             print(identificadorCarp2)
@@ -374,7 +375,7 @@ def pdf(text, nombre, ruta):
     nombre = ruta + nombre + ".pdf"
     if(os.path.exists(nombre)):
         print("ya existe")
-        raise FileExistsError("Ya existe pdf-pdf")
+        raise FileExistsError(f"Ya existe pdf{nombre}-pdf")
     doc = SimpleDocTemplate(nombre, pagesize=letter)
 
     # Estilos para el párrafo
@@ -435,7 +436,7 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-pdf("aaa", "batalla de rap demaciado random", "../../")
+interpreta("esta")
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
