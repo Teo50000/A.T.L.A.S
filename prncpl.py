@@ -33,15 +33,15 @@ def consiguePromt():
 #variables para que el back sepa que hacer
 disco1 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
 disco2 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
-functionToBeDone = "archivoAaPDF"
+functionToBeDone = "leer"
 srccc = False          #¿el src de la carpeta esta completo o no?
-ntpo = False          #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+ntpo = True          #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = ["nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "corrupto.docx" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "Z:/2025/back avanzado/" #será la carpeta en la que se encuentra en archivo
+identificadorCarp1 = "C:\\Users\\52218824\\Documents\\GitHub\\" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
-txt1 = ", educacion, patria, y familiasalud" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
-txt2 = "salud" #en caso de involucrar 2, este tambien
+txt1 = "a" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt2 = "VIVA PERON" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
 lineaDespues = False
@@ -57,20 +57,22 @@ def interpreta(prompt):
     if(type(identificadorArch1) != list): raise Exception("identificadores de archivos deben ser listas")
     identificadorCarp1 = identificadorCarp1.replace("/", "\\")
     identificadorCarp2 = identificadorCarp2.replace("/", "\\")
-    print(f"\n idenitificadorcarp1: {identificadorCarp1} \n identificadorcarp2: {identificadorCarp2} \n")
+    print(f"\n identificadorCarp1: {identificadorCarp1} \n identificadorCarp2: {identificadorCarp2} \n")
     try:
         print("dd")
         archivo_s = []
-        if(identificadorCarp1 != "" and identificadorCarp1[1] != ":"):
+        if(identificadorCarp1 == ""):
+            identificadorCarp1 = disco1
+        elif(identificadorCarp1 != "" and identificadorCarp1[1] != ":"):
             print("encontrand carpeta por nombre")
-            identificadorCarp1 = encontrarCarPorNombre(identificadorCarp1)
+            identificadorCarp1 = encontrarCarPorNombre(identificadorCarp1, disco1)
             print("carpeta 1 identificada")
-        elif(identificadorCarp1 == ""):
-            identificadorCarp1 = disco
         print(identificadorCarp1)
-        if(identificadorCarp2 != "" and identificadorCarp2[1] != ":"):
+        if(identificadorCarp2 == ""):
+            identificadorCarp2 = disco2
+        elif(identificadorCarp2 != "" and identificadorCarp2[1] != ":"):
             print(identificadorCarp2 + "\n")
-            identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2)
+            identificadorCarp2 = encontrarCarPorNombre(identificadorCarp2, disco2)
             print(identificadorCarp2)
         if(functionToBeDone != "dupdic"):
             if(ntpo == False):
@@ -91,7 +93,7 @@ def interpreta(prompt):
             elif(srccc == False and functionToBeDone != "crea" and functionToBeDone != "pdf"):
                 print(f"buscando archivos de nombre {identificadorArch1}")
                 for i in range(len(identificadorArch1)):
-                    archivo_s.append(encontrArchPorNombre(identificadorArch1[i]))
+                    archivo_s.append(encontrArchPorNombre(identificadorArch1[i], identificadorCarp1))
                 print("linea 62")
             else:
                 archivo_s = identificadorArch1
@@ -141,8 +143,8 @@ def interpreta(prompt):
                 for i in range(x):
                     rew = archivo_s[i]
                     ultimaBarra = rew.rfind("\\")
-                    nombrigual = rew[ultimaBarra+2: - len(terminacion)]
-                    rutigual = rew[:ultimaBarra+2]
+                    nombrigual = rew[ultimaBarra+1: - len(terminacion)]
+                    rutigual = rew[:ultimaBarra+1]
                     archivoAaPDF(rew, nombrigual, rutigual)
             else:
                 for i in  range(x):
@@ -152,12 +154,12 @@ def interpreta(prompt):
                 for i in range(x):
                     rew = archivo_s[i]
                     ultimaBarra = rew.rfind("\\")
-                    nombrigual = rew[ultimaBarra+2: - 4] + terminacion
-                    rutigual = rew[:ultimaBarra+2]
+                    nombrigual = rew[ultimaBarra+1: - 4] + terminacion
+                    rutigual = rew[:ultimaBarra+1]
                     PDFaTexto(rew, nombrigual, rutigual)
             else:
                 for i in  range(x):
-                    archivoAaPDF(archivo_s[i], nombres[i], identificadorCarp2)
+                    PDFaTexto(archivo_s[i], nombres[i], identificadorCarp2)
         elif(functionToBeDone == "renombrar"):
             for i in range (x):
                 renombrar(archivo_s[i], identificadorArch2)
@@ -290,15 +292,13 @@ def terminacionCompatible(archivo):
     return compatible
 
 
-def encontrArchPorNombre(archivo):
-    global disco
-    for (root,dirs,files) in os.walk(f"{disco}:\\", topdown=True):
+def encontrArchPorNombre(archivo, carpeta):
+    for (root,dirs,files) in os.walk(carpeta, topdown=True):
         for i in range(len(files)):
              if(files[i] == archivo):
                 return os.path.join(root, files[i])
 
-def encontrarCarPorNombre(carpeta):
-    global disco
+def encontrarCarPorNombre(carpeta, disco):
     for(root, dirs, files) in os.walk(f"{disco}:\\", topdown=True):
         for i in range(len(dirs)):
             if(dirs[i] == carpeta):
@@ -436,7 +436,7 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-interpreta("esta")
+print(interpreta("esta"))
 """
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
