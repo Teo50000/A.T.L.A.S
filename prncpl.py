@@ -1,3 +1,5 @@
+# pip install -r requirements.txt 
+# python prncpl.py
 import os
 import shutil
 
