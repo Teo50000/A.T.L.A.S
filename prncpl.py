@@ -8,7 +8,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 
-"""
+
 # Importamos Flask para crear el servidor web, request para leer el cuerpo de la petición
 # y jsonify para devolver respuestas en formato JSON fácilmente.
 from flask import Flask, request, jsonify
@@ -25,10 +25,12 @@ app = Flask(__name__)
 CORS(app)
 @app.route("/prompt", methods=["POST"])
 def consiguePromt():
-    prompt = request.get_json()
-    interpreta(prompt)
+    data = request.get_json()
+    prompt = data.get('nombre')
+    return jsonify({"mensaje": interpretan(prompt)})
  
-"""
+def interpretan(prompt):
+    return f"Hola {prompt}"
 
 #variables para que el back sepa que hacer
 disco1 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
@@ -436,11 +438,10 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-print(interpreta("esta"))
-"""
+
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
     # debug=True recarga el servidor al detectar cambios y muestra trazas de error legibles.
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
-"""
+
