@@ -1,0 +1,17 @@
+{
+    "name": "atlas-electron-ui",
+    "version": "1.0.0",
+    "private": true,
+    "description": "ATLAS – Asistente de Archivos IA (Frontend Electron)",
+    "main": "main.js",
+    "type": "module",
+    "scripts": {
+      "start": "electron .",
+      "dev": "electron . --enable-logging",
+      "pack": "echo 'Use electron-builder or forge if needed'"
+    },
+    "devDependencies": {
+      "electron": "^31.0.0"
+    },
+    "dependencies": {}
+  }

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATLAS – Asistente de Archivos IA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+    <div class="video-splash">
+      <video src="assets/ATLAS.mp4" autoplay muted playsinline></video>
+    </div>
+  <div class="window">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="drag-region"></div>
+      <div class="brand">
+        <div class="logo">
+          <div class="logo-inner">
+            <img src="../../../../../49549321/Downloads/logo atlas.png" alt="" class="logoimg">
+          </div>
+        </div>
+        <div class="title">
+          <strong>ATLAS</strong>
+          <span>Asistente de Archivos IA</span>
+        </div>
+      </div>
+      <nav class="tabs">
+        <button class="tab is-active" data-route="/">Inicio</button>
+        <button class="tab" data-route="/assistant">Asistente IA</button>
+      </nav>
+      <div class="actions">
+        <button id="themeToggle" class="icon-btn" title="Cambiar tema">
+          <span class="theme-text">Modo claro</span>
+        </button>
+        <span id="about" class="text-link">Sobre nosotros</span>
+        <span id="privacy" class="text-link">Privacidad</span>
+        <span id="salir" class="text-link strong">Salir</span>
+      </div>
+    </header>
+
+    <!-- Router outlet -->
+    <main id="app" class="main"></main>
+
+    <!-- Modals -->
+    <div id="aboutModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <h3>Sobre Nosotros</h3>
+        <div class="modal-content">
+          <p>Atlas fue desarrollado por tres alumnos de la Escuela Técnica ORT:</p>
+          
+          <div class="team-member">
+            <h4>Facundo Gutierrez</h4>
+            <p>Responsable del diseño y el front-end de la aplicación.</p>
+            <p><strong>facugitilowe9@gmail.com</strong></p>
+          </div>
+          
+          <div class="team-member">
+            <h4>Iair Grebnicoff</h4>
+            <p>Encargado del back-end, incluyendo la lógica de búsqueda y desplazamiento de archivos.</p>
+            <p><strong>iairgrebnicoff@gmail.com</strong></p>
+          </div>
+          
+          <div class="team-member">
+            <h4>Teo Nieto</h4>
+            <p>Responsable de la creación y entrenamiento de la IA, enseñándole cómo interpretar y transmitir información hacia el back-end.</p>
+            <p><strong>teonieto360@gmail.com</strong></p>
+          </div>
+          
+          <p>Durante el desarrollo de Atlas nos encontramos con muchos desafíos, pero gracias al trabajo en equipo y la perseverancia, fuimos capaces de superarlos y aprender de cada uno de ellos.</p>
+          
+          <p>Este proyecto fue desarrollado dentro del marco de la materia de TIC, donde se nos asignaron tres meses para materializar una idea desde cero.</p>
+          
+          <p>En caso de tener alguna duda o propuesta, estamos disponibles para responder cualquier mensaje que nos envíen por Gmail. Siempre agradecemos el interés y la colaboración.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="aboutClose" class="btn primary">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="privacyModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <h3>Privacidad</h3>
+        <div class="modal-content">
+          <p>En Atlas nos comprometemos profundamente a respetar tu privacidad. Nuestra inteligencia artificial está diseñada únicamente para copiar y mover archivos, siempre siguiendo tus instrucciones explícitas.</p>
+          
+          <h4>Gestión de Archivos</h4>
+          <p>Es importante destacar que Atlas no almacena ningún archivo en memoria externa ni guarda contenido sensible. La copia de archivos se realiza de forma momentánea en su propia memoria de trabajo, de la misma manera en que lo harías al duplicar un archivo manualmente en tu computadora. En ningún momento accede, guarda ni transmite el contenido a servidores externos u otros dispositivos.</p>
+          
+          <h4>Nuestra Filosofía</h4>
+          <p>En el equipo de desarrollo entendemos que la privacidad de nuestros hogares y archivos personales es esencial para garantizar una verdadera libertad informática, siempre y cuando esta no se utilice con fines que puedan dañar o perjudicar a otros.</p>
+          
+          <p>Atlas fue creado con este principio en mente: ayudarte a organizar tus archivos sin comprometer tu seguridad ni tu privacidad.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="privacyClose" class="btn primary">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="exitModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <h3>¿Seguro que querés salir?<span class="close-btn">×</span></h3>
+        <div class="modal-content">
+          <p>Cualquier operación que se esté ejecutando y no haya terminado se cancelará y no te dará el resultado que estabas buscando</p>
+        </div>
+        <div class="modal-actions">
+          <button id="exitCancel" class="btn ghost">Cancelar</button>
+          <button id="exitOk" class="btn danger">Salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="renderer.js"></script>
+</body>
+</html>
