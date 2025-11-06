@@ -39,8 +39,8 @@ disco1 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se
 disco2 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se puede
 functionToBeDone = "leer"
 srccc = False          #¿el src de la carpeta esta completo o no?
-ntpo = True          #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = ["nose.txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
+identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
 identificadorArch2 = "corrupto.docx" #en caso de involucrar un segundo archivo
 identificadorCarp1 = "C:\\Users\\52218824\\Documents\\GitHub\\" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
@@ -105,6 +105,8 @@ def interpreta(prompt):
             print(archivo_s)
             x = len(archivo_s)
         print("identificado")
+        if(archivo_s == [] or archivo_s[0] == None):
+            return "Ningun archivo cumple estas caracteristicass"
         if(functionToBeDone == "crea"):
             for i in range(x):    
                 bienescrito = True
