@@ -372,11 +372,14 @@ function initChat() {
   function addMessage(text, isUser = false) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
-    messageDiv.innerHTML = `<div class="message-text">${text}</div>`;
     
+    const messageText = document.createElement('div');
+    messageText.className = 'message-text';
+    messageText.textContent = text; // ✅ Esto NO ejecuta código
+    
+    messageDiv.appendChild(messageText);
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
-    enviar(text)
   }
 
   function sendMessage() {
