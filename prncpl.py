@@ -41,10 +41,11 @@ functionToBeDone = "leer"
 srccc = False          #¿el src de la carpeta esta completo o no?
 ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch2 = "corrupto.docx" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "C:\\Users\\49549321\\Documents\\GitHub\\" #será la carpeta en la que se encuentra en archivo
+identificadorCarp1 = "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
-txt1 = "a" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt1 = "LES MUCHACHES PERONISTES \n TODES UNIDES TRIUNFAREMOS" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "VIVA PERON" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
@@ -108,13 +109,22 @@ def interpreta(prompt):
         if(archivo_s == [] or archivo_s[0] == None):
             return "Ningun archivo cumple estas caracteristicass"
         if(functionToBeDone == "crea"):
+            qq = True
             for i in range(x):    
                 bienescrito = True
                 aVerNoPodesPonerEsosCaracteresPoneAlgoNormal = ["$", "/", ":", '"', "<", ">", "|", "?", "*", "\\"]
                 for f in range(len(aVerNoPodesPonerEsosCaracteresPoneAlgoNormal)):
                     if aVerNoPodesPonerEsosCaracteresPoneAlgoNormal[f] in archivo_s[i]:
                         bienescrito = False
-                crea(txt1, identificadorCarp1 + archivo_s[i]) if  bienescrito else print("PONE UN CARACTER NORMAL")
+                if  bienescrito:
+                    crea(txt1, identificadorCarp1 + archivo_s[i])  
+                else:
+                    qq=False
+            if qq: 
+                return("Archivo creado exitosamente") 
+            else:
+                return("Al menos un archivo esta mal escrito")
+                
         elif(functionToBeDone == "pdf"):
             for i in range(x):
                 crea(txt1, archivo_s[i])
