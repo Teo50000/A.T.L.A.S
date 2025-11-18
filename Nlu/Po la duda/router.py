@@ -11,9 +11,7 @@ Este módulo recibe:
  - Llama a la función correspondiente de actions.py
 """
 
-# =========================================================
-# 🔍 EXTRACCIÓN DE INFORMACIÓN (slots)
-# =========================================================
+
 def extract_slots(text):
     """
     Extrae elementos del texto:
@@ -34,9 +32,7 @@ def extract_slots(text):
     }
 
 
-# =========================================================
-# 🚦 RUTEADOR PRINCIPAL
-# =========================================================
+
 def route(intent, text):
     """
     Recibe la intención detectada (por NLU)
@@ -85,7 +81,6 @@ def route(intent, text):
             print("[Router] No se encontró PDF para convertir.")
         return
 
-    # --- MODIFICACIONES DE TEXTO ---
     elif intent == "modificaDondeDice":
         if len(textos) >= 2 and archivos:
             actions.modificaDondeDice(textos[0], archivos[0], textos[1], False, False)
@@ -107,7 +102,6 @@ def route(intent, text):
             print("[Router] Faltan datos para eliminar texto.")
         return
 
-    # --- OPERACIONES DE ARCHIVOS ---
     elif intent == "eliminARchivo":
         if archivos:
             for arch in archivos:
@@ -139,7 +133,6 @@ def route(intent, text):
             print("[Router] Faltan parámetros para renombrar.")
         return
 
-    # --- OPERACIONES DE CARPETAS ---
     elif intent == "dupdic":
         if len(carpetas) >= 2:
             actions.dupdic(carpetas[0], carpetas[1])
@@ -154,7 +147,6 @@ def route(intent, text):
             print("[Router] Faltan carpetas para mover.")
         return
 
-    # --- CASO POR DEFECTO ---
     else:
         print(f"[Router] Intención desconocida o no implementada: {intent}")
         return

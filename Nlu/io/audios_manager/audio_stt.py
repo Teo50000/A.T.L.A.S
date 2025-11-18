@@ -1,4 +1,3 @@
-# io/audios_manager/audio_stt.py
 import os
 from faster_whisper import WhisperModel
 
@@ -13,15 +12,13 @@ Depende de:
  - ffmpeg (binario en /tools/ffmpeg/bin/)
 """
 
-# =========================================================
-# ⚙️ CONFIGURACIÓN INICIAL
-# =========================================================
-# Ruta al binario de ffmpeg (para asegurar compatibilidad en Windows)
+#Esto es para solucionar un error con windoes aunqe tengo entendido que el error no aparece en todas las compus(creo que depende de la version de windous)
 ffmpeg_dir = os.path.abspath("tools/ffmpeg/bin")
 os.environ["PATH"] = ffmpeg_dir + ";" + os.environ["PATH"]
 
-# Carga del modelo Whisper
-# Modelos disponibles: tiny, base, small, medium, large
+# Carga el modelo fast Whisper
+# Todas las configuraciones posibles: tiny, base, small, medium, large
+#Elegi la small porque de todas las pruebas que hice es la mejor calida/velocidad
 model = WhisperModel("small", device="cpu", compute_type="int8")
 
 # =========================================================
@@ -38,7 +35,7 @@ def transcribe_audio(audio_path: str) -> str:
 
     print(f"[🎧] Transcribiendo: {audio_path} ...")
 
-    # Transcripción con configuración ligera (optimizada para ATLAS)
+    # Configuracion para que sea rapida
     segments, info = model.transcribe(
         audio_path,
         vad_filter=True,               # filtra silencios automáticos
@@ -57,9 +54,7 @@ def transcribe_audio(audio_path: str) -> str:
     return texto
 
 
-# =========================================================
-# 🧩 PRUEBA RÁPIDA
-# =========================================================
+#Test
 if __name__ == "__main__":
     # Ejemplo: transcribir un audio guardado en audios_raw
     prueba = "io/audios_manager/audios_raw/Audio1.ogg"
