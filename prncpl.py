@@ -4,6 +4,7 @@ import os
 import shutil
 import psycopg
 import bcrypt
+import jwt
 
 
 
@@ -37,20 +38,61 @@ CORS(app)
 def consiguePromt():
     data = request.get_json()
     prompt = data.get('nombre')
+    token = data.get('token')
+    try:
+        tokenn = jwt.decode(token, "clave_secreta", algorithms=["HS256"])
+        print("Token válido:", tokenn)
+    except jwt.ExpiredSignatureError:
+        return("Token vencido")
+    except jwt.InvalidTokenError:
+        return("Token inválido")
     return jsonify({"mensaje": interpretan(prompt)})
 
 
 @app.route("/regis", methods=["POST"])
-def consiguePromt():
+def creaUser():
     data = request.get_json()
     usuario = data.get('usuario')
-    contraseña = data.get('usuario')
+    contraseña = data.get('contraseña')
     return jsonify({"mensaje": nuevaCuenta(usuario, contraseña)})
+
+@app.route("/iniSecion", methods=["POST"])
+def consigueUser():
+    data = request.get_json()
+    usuario = data.get('usuario')
+    contraseña = data.get('contraseña')
+    return jsonify({"mensaje": inSecion(usuario, contraseña)})
  
 def nuevaCuenta(usuario, contraseña):
-    contraseña = contraseña.encode()
-    hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt())
-    cursor.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, contraseña))
+    if not usuario or not contraseña:
+        return "usuario y contraseña requeridos"
+    try:
+        contraseña = contraseña.encode('utf-8')
+        hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt())
+        with conexion.cursor() as cur:
+        cur.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, hasheado))
+        return "Usuario creado exitosamente"
+    except psycopg.errors.UniqueViolation:
+        # si el nombre ya existe
+        conexion.rollback()
+        return "Ese nombre de usuario ya existe"
+    except Exception as e:
+        conexion.rollback()
+        return f"Error al crear usuario: {e}"
+
+def iniSecion(usuario, contraseña):
+        if not usuario or not contraseña:
+        return "usuario y contraseña requeridos"
+    with conexion.cursor() as cur:
+    cur.execute("SELECT contraseña FROM usuario WHERE nombre = %s", (usuario))
+    resultado = cur.fetchone()
+    contHash =  resultado[0].encode('utf-8')
+    if(bcrypt.checkpw(contraseña.encode('utf-8'), password_hash) == True):
+        token = jwt.encode({"user": usuario}, "clave_secreta", algorithm="HS256")
+        return token
+    else:
+        return "Usuario co contraseña incorrectos"
+
 
 def interpretan(prompt):
     return f"Hola {prompt}"
