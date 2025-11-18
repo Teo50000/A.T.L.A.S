@@ -89,12 +89,14 @@ def inSecion(usuario, contraseña):
     with conexion.cursor() as cur:
         cur.execute("SELECT contraseña FROM usuario WHERE usuario = %s", (usuario,))
         resultado = cur.fetchone()
+    if(resultado == None):
+        return "Usuario no encontrado"
     contHash =  resultado[0].encode('utf-8')
     if(bcrypt.checkpw(contraseña.encode('utf-8'), contHash) == True):
         token = jwt.encode({"user": usuario}, "clave_secreta", algorithm="HS256")
         return token
     else:
-        return "Usuario co contraseña incorrectos"
+        return "Contraseña incorrecta"
 
 
 def interpretan(prompt):
@@ -525,4 +527,4 @@ if __name__ == "__main__":
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
 """
-print(inSecion("papa", "frota"))
+print(inSecion("LOS MUCHACHOS PERONISTAS", "TODOS UNIDOS TRIUNFAREMOS"))
