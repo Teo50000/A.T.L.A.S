@@ -2,6 +2,8 @@
 # python prncpl.py
 import os
 import shutil
+import psycopg
+import bcrypt
 
 
 
@@ -22,6 +24,12 @@ from flask_cors import CORS
 # Creamos la aplicación Flask.
 app = Flask(__name__)
 
+conexion = psycopg.connect(
+    "postgresql://neondb_owner:TU_PASSWORD@ep-big-tree-bf7rmeks-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+)
+
+
+
 # Habilitamos CORS globalmente (para todas las rutas). En producción conviene
 # restringirlo a los orígenes que realmente vayan a usar tu API.
 CORS(app)
@@ -30,7 +38,20 @@ def consiguePromt():
     data = request.get_json()
     prompt = data.get('nombre')
     return jsonify({"mensaje": interpretan(prompt)})
+
+
+@app.route("/regis", methods=["POST"])
+def consiguePromt():
+    data = request.get_json()
+    usuario = data.get('usuario')
+    contraseña = data.get('usuario')
+    return jsonify({"mensaje": nuevaCuenta(usuario, contraseña)})
  
+def nuevaCuenta(usuario, contraseña):
+    contraseña = contraseña.encode()
+    hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt())
+    cursor.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, contraseña))
+
 def interpretan(prompt):
     return f"Hola {prompt}"
 
