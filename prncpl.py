@@ -26,7 +26,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 conexion = psycopg.connect(
-    "postgresql://neondb_owner:TU_PASSWORD@ep-big-tree-bf7rmeks-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    'postgresql://neondb_owner:npg_jJUBTeg36GQE@ep-tiny-grass-ac6rmdks-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
 )
 
 
@@ -65,13 +65,14 @@ def consigueUser():
  
 def nuevaCuenta(usuario, contraseña):
     if not usuario or not contraseña:
-        return "usuario y contraseña requeridos"
+        a = "usuario y contraseña requeridos"
+        return a
     try:
         contraseña = contraseña.encode('utf-8')
         hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt())
         with conexion.cursor() as cur:
-        cur.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, hasheado))
-        return "Usuario creado exitosamente"
+            cur.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, hasheado))
+            return "Usuario creado exitosamente"
     except psycopg.errors.UniqueViolation:
         # si el nombre ya existe
         conexion.rollback()
@@ -81,11 +82,12 @@ def nuevaCuenta(usuario, contraseña):
         return f"Error al crear usuario: {e}"
 
 def iniSecion(usuario, contraseña):
-        if not usuario or not contraseña:
-        return "usuario y contraseña requeridos"
+    if not usuario or not contraseña:
+        a = "usuario y contraseña requeridos"
+        return a
     with conexion.cursor() as cur:
-    cur.execute("SELECT contraseña FROM usuario WHERE nombre = %s", (usuario))
-    resultado = cur.fetchone()
+        cur.execute("SELECT contraseña FROM usuario WHERE nombre = %s", (usuario))
+        resultado = cur.fetchone()
     contHash =  resultado[0].encode('utf-8')
     if(bcrypt.checkpw(contraseña.encode('utf-8'), password_hash) == True):
         token = jwt.encode({"user": usuario}, "clave_secreta", algorithm="HS256")
@@ -515,10 +517,11 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-
+"""
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
     # debug=True recarga el servidor al detectar cambios y muestra trazas de error legibles.
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
-
+"""
+creaUser("papa", "frita")
