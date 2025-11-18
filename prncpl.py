@@ -69,9 +69,10 @@ def nuevaCuenta(usuario, contraseña):
         return a
     try:
         contraseña = contraseña.encode('utf-8')
-        hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt())
+        hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt()).decode('utf-8')
         with conexion.cursor() as cur:
             cur.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, hasheado))
+            conexion.commit()
             return "Usuario creado exitosamente"
     except psycopg.errors.UniqueViolation:
         # si el nombre ya existe
@@ -81,15 +82,15 @@ def nuevaCuenta(usuario, contraseña):
         conexion.rollback()
         return f"Error al crear usuario: {e}"
 
-def iniSecion(usuario, contraseña):
+def inSecion(usuario, contraseña):
     if not usuario or not contraseña:
         a = "usuario y contraseña requeridos"
         return a
     with conexion.cursor() as cur:
-        cur.execute("SELECT contraseña FROM usuario WHERE nombre = %s", (usuario))
+        cur.execute("SELECT contraseña FROM usuario WHERE usuario = %s", (usuario,))
         resultado = cur.fetchone()
     contHash =  resultado[0].encode('utf-8')
-    if(bcrypt.checkpw(contraseña.encode('utf-8'), password_hash) == True):
+    if(bcrypt.checkpw(contraseña.encode('utf-8'), contHash) == True):
         token = jwt.encode({"user": usuario}, "clave_secreta", algorithm="HS256")
         return token
     else:
@@ -524,4 +525,4 @@ if __name__ == "__main__":
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
 """
-creaUser("papa", "frita")
+print(inSecion("papa", "frota"))
