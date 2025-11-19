@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import path from 'node:path'
 
+const { exec } = require('child_process');
 // Simula __dirname y __filename en módulos ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -40,3 +41,12 @@ app.on('activate', () => {
 ipcMain.handle('app:confirm-exit', async () => {
   app.quit()
 })
+const { app } = require('electron');
+const { exec } = require('child_process');
+
+// Matar procesos hijos (backend, python, node, etc.)
+app.on('before-quit', () => {
+  exec('taskkill /IM node.exe /F');
+  exec('taskkill /IM python.exe /F');
+  exec('taskkill /IM cmd.exe /F');
+});
