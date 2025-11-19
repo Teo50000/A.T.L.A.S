@@ -41,8 +41,6 @@ app.on('activate', () => {
 ipcMain.handle('app:confirm-exit', async () => {
   app.quit()
 })
-const { app } = require('electron');
-const { exec } = require('child_process');
 
 // Matar procesos hijos (backend, python, node, etc.)
 app.on('before-quit', () => {
