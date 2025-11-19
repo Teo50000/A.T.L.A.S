@@ -38,14 +38,18 @@ CORS(app)
 def consiguePromt():
     data = request.get_json()
     prompt = data.get('nombre')
-    token = data.get('token')
+    if(prompt == None):
+        return("Falta prompt")
+    token = request.headers.get('Authorization')
+    if token.startswith("Bearer "):
+            token = token[7:]  # Elimina "Bearer " (7 caracteres)
     try:
         tokenn = jwt.decode(token, "clave_secreta", algorithms=["HS256"])
         print("Token válido:", tokenn)
     except jwt.ExpiredSignatureError:
         return("Token vencido")
     except jwt.InvalidTokenError:
-        return("Token inválido")
+        return(f"Token inválido, {token}")
     return jsonify({"mensaje": interpretan(prompt)})
 
 
@@ -94,6 +98,8 @@ def inSecion(usuario, contraseña):
     contHash =  resultado[0].encode('utf-8')
     if(bcrypt.checkpw(contraseña.encode('utf-8'), contHash) == True):
         token = jwt.encode({"user": usuario}, "clave_secreta", algorithm="HS256")
+        if isinstance(token, bytes):
+            token = token.decode('utf-8')
         return token
     else:
         return "Contraseña incorrecta"
@@ -520,11 +526,10 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-"""
+
+
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
     # debug=True recarga el servidor al detectar cambios y muestra trazas de error legibles.
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
-"""
-print(inSecion("LOS MUCHACHOS PERONISTAS", "TODOS UNIDOS TRIUNFAREMOS"))
