@@ -2,6 +2,9 @@
 # python prncpl.py
 import os
 import shutil
+import psycopg
+import bcrypt
+import jwt
 
 
 
@@ -22,6 +25,12 @@ from flask_cors import CORS
 # Creamos la aplicación Flask.
 app = Flask(__name__)
 
+conexion = psycopg.connect(
+    'postgresql://neondb_owner:npg_jJUBTeg36GQE@ep-tiny-grass-ac6rmdks-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+)
+
+
+
 # Habilitamos CORS globalmente (para todas las rutas). En producción conviene
 # restringirlo a los orígenes que realmente vayan a usar tu API.
 CORS(app)
@@ -29,8 +38,67 @@ CORS(app)
 def consiguePromt():
     data = request.get_json()
     prompt = data.get('nombre')
-    return jsonify({"mensaje": interpreta(prompt)})
+    token = data.get('token')
+    try:
+        tokenn = jwt.decode(token, "clave_secreta", algorithms=["HS256"])
+        print("Token válido:", tokenn)
+    except jwt.ExpiredSignatureError:
+        return("Token vencido")
+    except jwt.InvalidTokenError:
+        return("Token inválido")
+    return jsonify({"mensaje": interpretan(prompt)})
+
+
+@app.route("/regis", methods=["POST"])
+def creaUser():
+    data = request.get_json()
+    usuario = data.get('usuario')
+    contraseña = data.get('contraseña')
+    return jsonify({"mensaje": nuevaCuenta(usuario, contraseña)})
+
+@app.route("/iniSecion", methods=["POST"])
+def consigueUser():
+    data = request.get_json()
+    usuario = data.get('usuario')
+    contraseña = data.get('contraseña')
+    return jsonify({"mensaje": inSecion(usuario, contraseña)})
  
+def nuevaCuenta(usuario, contraseña):
+    if not usuario or not contraseña:
+        a = "usuario y contraseña requeridos"
+        return a
+    try:
+        contraseña = contraseña.encode('utf-8')
+        hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt()).decode('utf-8')
+        with conexion.cursor() as cur:
+            cur.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, hasheado))
+            conexion.commit()
+            return "Usuario creado exitosamente"
+    except psycopg.errors.UniqueViolation:
+        # si el nombre ya existe
+        conexion.rollback()
+        return "Ese nombre de usuario ya existe"
+    except Exception as e:
+        conexion.rollback()
+        return f"Error al crear usuario: {e}"
+
+def inSecion(usuario, contraseña):
+    if not usuario or not contraseña:
+        a = "usuario y contraseña requeridos"
+        return a
+    with conexion.cursor() as cur:
+        cur.execute("SELECT contraseña FROM usuario WHERE usuario = %s", (usuario,))
+        resultado = cur.fetchone()
+    if(resultado == None):
+        return "Usuario no encontrado"
+    contHash =  resultado[0].encode('utf-8')
+    if(bcrypt.checkpw(contraseña.encode('utf-8'), contHash) == True):
+        token = jwt.encode({"user": usuario}, "clave_secreta", algorithm="HS256")
+        return token
+    else:
+        return "Contraseña incorrecta"
+
+
 def interpretan(prompt):
     return f"Hola {prompt}"
 
@@ -40,11 +108,12 @@ disco2 = "C:" #por default se trabajará en el disco C, si se desea cambiarlo se
 functionToBeDone = "leer"
 srccc = False          #¿el src de la carpeta esta completo o no?
 ntpo = False        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
-identificadorArch1 = [".js"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+identificadorArch1 = [".txt"] #el archivo principal que sera modificado, o la forma de encontrar los archivos
+ntpo = True        #¿el identificador del archivo es el nombre/vinculo o el tipo de archivo?
 identificadorArch2 = "corrupto.docx" #en caso de involucrar un segundo archivo
-identificadorCarp1 = "C:\\Users\\49549321\\Documents\\GitHub\\" #será la carpeta en la que se encuentra en archivo
+identificadorCarp1 = "C:\\Users\\52218824\\Documents\\GitHub\\A.T.L.A.S\\" #será la carpeta en la que se encuentra en archivo
 identificadorCarp2 = "" #en caso de involucrar 2 carpetas
-txt1 = "a" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
+txt1 = "LES MUCHACHES PERONISTES \n TODES UNIDES TRIUNFAREMOS" #en caso de involucrar un texto, se usara este, en funciones de agregar, eleminar, o reemplazar, es el texto que viene antes del agregado y/o el que hay que eliminar
 txt2 = "VIVA PERON" #en caso de involucrar 2, este tambien
 walk = True #Todos los archivos solo dentro de una carpeta? o dentro de sus subcarpetas tambien?
 lineaAntes = False
@@ -108,13 +177,22 @@ def interpreta(prompt):
         if(archivo_s == [] or archivo_s[0] == None):
             return "Ningun archivo cumple estas caracteristicass"
         if(functionToBeDone == "crea"):
+            qq = True
             for i in range(x):    
                 bienescrito = True
                 aVerNoPodesPonerEsosCaracteresPoneAlgoNormal = ["$", "/", ":", '"', "<", ">", "|", "?", "*", "\\"]
                 for f in range(len(aVerNoPodesPonerEsosCaracteresPoneAlgoNormal)):
                     if aVerNoPodesPonerEsosCaracteresPoneAlgoNormal[f] in archivo_s[i]:
                         bienescrito = False
-                crea(txt1, identificadorCarp1 + archivo_s[i]) if  bienescrito else print("PONE UN CARACTER NORMAL")
+                if  bienescrito:
+                    crea(txt1, identificadorCarp1 + archivo_s[i])  
+                else:
+                    qq=False
+            if qq: 
+                return("Archivo creado exitosamente") 
+            else:
+                return("Al menos un archivo esta mal escrito")
+                
         elif(functionToBeDone == "pdf"):
             for i in range(x):
                 crea(txt1, archivo_s[i])
@@ -442,10 +520,11 @@ def renombrar(archV, nuevoNombre):
     os.rename(archV, nuevoNombre)
     print(nuevoNombre)
 
-
+"""
 # Punto de entrada del programa. Si ejecutas `python app.py`, Flask levanta el servidor local.
 if __name__ == "__main__":
     # debug=True recarga el servidor al detectar cambios y muestra trazas de error legibles.
     # port=5000 hace que escuche en http://127.0.0.1:5000
     app.run(port=5000, debug=True)
-
+"""
+print(inSecion("LOS MUCHACHOS PERONISTAS", "TODOS UNIDOS TRIUNFAREMOS"))
