@@ -40,3 +40,26 @@ app.on('activate', () => {
 ipcMain.handle('app:confirm-exit', async () => {
   app.quit()
 })
+
+const { app } = require("electron");
+const { spawn } = require("child_process");
+
+let pythonProcess = null;
+
+function startPython() {
+    pythonProcess = spawn("python", ["prncpl.py"], {
+        stdio: "ignore",
+        detached: true
+    });
+    pythonProcess.unref();
+}
+
+app.on("ready", () => {
+    startPython();
+    createWindow();
+});
+
+// Cuando cerrás Atlas:
+app.on("quit", () => {
+    if (pythonProcess) pythonProcess.kill();
+});
