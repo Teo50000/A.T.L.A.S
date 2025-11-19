@@ -39,15 +39,17 @@ def consiguePromt():
     data = request.get_json()
     prompt = data.get('nombre')
     if(prompt == None):
-        return("Falta prompt")
+        return jsonify({"mensaje":"Falta el prompt"})
     token = request.headers.get('Authorization')
+    if(token == None):
+        return jsonify({"mensaje":"Inicia sesión de y vuelve a intentarlo"})
     if token.startswith("Bearer "):
             token = token[7:]  # Elimina "Bearer " (7 caracteres)
     try:
         tokenn = jwt.decode(token, "clave_secreta", algorithms=["HS256"])
         print("Token válido:", tokenn)
     except jwt.ExpiredSignatureError:
-        return("Token vencido")
+        return jsonify({"mensaje":"Token vencido"})
     except jwt.InvalidTokenError:
         return(f"Token inválido, {token}")
     return jsonify({"mensaje": interpretan(prompt)})
