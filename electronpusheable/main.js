@@ -2,14 +2,15 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import path from 'node:path'
+import { exec } from 'node:child_process';  // ✅ Importar exec con ES modules
 
-const { exec } = require('child_process');
 // Simula __dirname y __filename en módulos ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isDev = !app.isPackaged
 
 let win
+
 async function createWindow () {
   win = new BrowserWindow({
     fullscreen: true,
