@@ -364,10 +364,33 @@ function renderAssistant() {
 }
 token = ""
 // Inicializar chat
-function initChat() {
+async function initChat() {
   const chatBody = document.getElementById('chatBody');
   const chatInput = document.getElementById('chatInput');
   const sendButton = document.getElementById('sendButton');
+
+  const res = await fetch("http://127.0.0.1:5000/mensajeViejo", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+  });
+  const data = await res.json();
+  data = data.ok
+  for(let i = 0; i<data.length; i++){
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${data[i].isUser ? 'user' : 'ai'}`;
+    
+    const messageText = document.createElement('div');
+    messageText.className = 'message-text';
+    messageText.textContent = data[i].texto; 
+
+    messageDiv.appendChild(messageText);
+    chatBody.appendChild(messageDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
 
   async function addMessage(text, isUser = false) {
     const messageDiv = document.createElement('div');
@@ -380,7 +403,7 @@ function initChat() {
     messageDiv.appendChild(messageText);
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
-    /*
+    
     const res = await fetch("http://127.0.0.1:5000/mensajeNuevo", {
       method: "POST",
       headers: {
@@ -389,7 +412,7 @@ function initChat() {
       },
       body: JSON.stringify({ text, isUser })
     });
-    */
+    
   }
 
   function sendMessage() {

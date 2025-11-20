@@ -55,11 +55,11 @@ def consiguePromt():
         return(f"Token inválido, {token}")
     return jsonify({"mensaje": interpretan(us)})
 
-"""
+
 @app.route("/mensajeNuevo", methods=["POST"])
-def menbsaje():
+def mensajeN():
     data = request.get_json()
-    texto = data.get('texto')
+    texto = data.get('text')
     isUser = data.get('isUser')
 
     token = request.headers.get('Authorization')
@@ -70,8 +70,45 @@ def menbsaje():
     try:
         tokenn = jwt.decode(token, "ATLAS_GGN", algorithms=["HS256"])
         us = tokenn["user"]
+    except jwt.ExpiredSignatureError:
+        return jsonify({"mensaje":"Token vencido"})
+    except jwt.InvalidTokenError:
+        return(f"Token inválido, {token}")
     return jsonify({"ok": agregaMnsj(us, texto, isUser)})
-"""
+
+
+@app.route("/mensajeViejo", methods=["GET"])
+def mensaje():
+    data = request.get_json()
+
+    token = request.headers.get('Authorization')
+    if(token == None):
+        return jsonify({"mensaje":"Inicia sesión de y vuelve a intentarlo"})
+    if token.startswith("Bearer "):
+            token = token[7:]  # Elimina "Bearer " (7 caracteres)
+    try:
+        tokenn = jwt.decode(token, "ATLAS_GGN", algorithms=["HS256"])
+        us = tokenn["user"]
+    except jwt.ExpiredSignatureError:
+        return jsonify({"mensaje":"Token vencido"})
+    except jwt.InvalidTokenError:
+        return(f"Token inválido, {token}")
+    return jsonify({"ok": muenstraMnsj(us)})
+
+def muenstraMnsj(us):
+    try:
+        with conexion.cursor() as cur:
+            cur.execute("SELECT id FROM usuario WHERE usuario = %s", (us,))
+            usuario = cur.fetchone()[0]
+            cur.execute('SELECT m.texto, m.isuser FROM usuario u INNER JOIN mensaje m ON u.id = m.userid WHERE u.id = %s ORDER BY m.id', (usuario,))
+            conexion.commit()
+            
+            mensajes = cur.fetchall()  # ✓ Retornar resultados
+            return [{"texto": msg[0], "isUser": msg[1]} for msg in mensajes]  # ✓ Formato lista de dicts  
+    except Exception as e:
+        conexion.rollback()
+        return f"Error al mostrar mensaje: {e}"
+
 
 @app.route("/regis", methods=["POST"])
 def creaUser():
@@ -86,19 +123,19 @@ def consigueUser():
     usuario = data.get('usuario')
     contraseña = data.get('contraseña')
     return jsonify({"mensaje": inSecion(usuario, contraseña)})
- """
+ 
 def agregaMnsj(us, texto, isUser):
     try:
-        with conexion.cursor as cur:
-            cur.execute("SELECT id FROM usuario WHERE usuario = %s", us)
-            usuario = cur.fetchone()
-            cur.execute("INSERT INTO mensaje (userid, texto, isUser) VALUES (%s, %s, %s)", (usuario, texo, isUser))
+        with conexion.cursor() as cur:
+            cur.execute("SELECT id FROM usuario WHERE usuario = %s", (us,))
+            usuario = cur.fetchone()[0]
+            cur.execute('INSERT INTO mensaje (userid, texto, isuser) VALUES (%s, %s, %s)', (usuario, texto, isUser))
             conexion.commit()
             return("Mensaje guardado")    
     except Exception as e:
         conexion.rollback()
         return f"Error al  gurdar mensaje: {e}"
-"""    
+    
 
 
 def nuevaCuenta(usuario, contraseña):
