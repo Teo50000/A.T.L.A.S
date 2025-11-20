@@ -46,7 +46,7 @@ def consiguePromt():
     if token.startswith("Bearer "):
             token = token[7:]  # Elimina "Bearer " (7 caracteres)
     try:
-        tokenn = jwt.decode(token, "clave_secreta", algorithms=["HS256"])
+        tokenn = jwt.decode(token, "ATLAS_GGN", algorithms=["HS256"])
         print("Token válido:", tokenn)
     except jwt.ExpiredSignatureError:
         return jsonify({"mensaje":"Token vencido"})
@@ -99,7 +99,7 @@ def inSecion(usuario, contraseña):
         return "Usuario no encontrado"
     contHash =  resultado[0].encode('utf-8')
     if(bcrypt.checkpw(contraseña.encode('utf-8'), contHash) == True):
-        token = jwt.encode({"user": usuario}, "clave_secreta", algorithm="HS256")
+        token = jwt.encode({"user": usuario}, "ATLAS_GGN", algorithm="HS256")
         if isinstance(token, bytes):
             token = token.decode('utf-8')
         return token
