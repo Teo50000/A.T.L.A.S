@@ -362,24 +362,34 @@ function renderAssistant() {
   // Funcionalidad del chat
   initChat();
 }
-
+token = ""
 // Inicializar chat
 function initChat() {
   const chatBody = document.getElementById('chatBody');
   const chatInput = document.getElementById('chatInput');
   const sendButton = document.getElementById('sendButton');
 
-  function addMessage(text, isUser = false) {
+  async function addMessage(text, isUser = false) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
     
     const messageText = document.createElement('div');
     messageText.className = 'message-text';
-    messageText.textContent = text; // ✅ Esto NO ejecuta código
-    
+    messageText.textContent = text; 
+
     messageDiv.appendChild(messageText);
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
+    /*
+    const res = await fetch("http://127.0.0.1:5000/mensajeNuevo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token
+      },
+      body: JSON.stringify({ text, isUser })
+    });
+    */
   }
 
   function sendMessage() {

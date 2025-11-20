@@ -47,13 +47,31 @@ def consiguePromt():
             token = token[7:]  # Elimina "Bearer " (7 caracteres)
     try:
         tokenn = jwt.decode(token, "ATLAS_GGN", algorithms=["HS256"])
+        us = tokenn["user"]
         print("Token válido:", tokenn)
     except jwt.ExpiredSignatureError:
         return jsonify({"mensaje":"Token vencido"})
     except jwt.InvalidTokenError:
         return(f"Token inválido, {token}")
-    return jsonify({"mensaje": interpretan(prompt)})
+    return jsonify({"mensaje": interpretan(us)})
 
+"""
+@app.route("/mensajeNuevo", methods=["POST"])
+def menbsaje():
+    data = request.get_json()
+    texto = data.get('texto')
+    isUser = data.get('isUser')
+
+    token = request.headers.get('Authorization')
+    if(token == None):
+        return jsonify({"mensaje":"Inicia sesión de y vuelve a intentarlo"})
+    if token.startswith("Bearer "):
+            token = token[7:]  # Elimina "Bearer " (7 caracteres)
+    try:
+        tokenn = jwt.decode(token, "ATLAS_GGN", algorithms=["HS256"])
+        us = tokenn["user"]
+    return jsonify({"ok": agregaMnsj(us, texto, isUser)})
+"""
 
 @app.route("/regis", methods=["POST"])
 def creaUser():
@@ -68,7 +86,21 @@ def consigueUser():
     usuario = data.get('usuario')
     contraseña = data.get('contraseña')
     return jsonify({"mensaje": inSecion(usuario, contraseña)})
- 
+ """
+def agregaMnsj(us, texto, isUser):
+    try:
+        with conexion.cursor as cur:
+            cur.execute("SELECT id FROM usuario WHERE usuario = %s", us)
+            usuario = cur.fetchone()
+            cur.execute("INSERT INTO mensaje (userid, texto, isUser) VALUES (%s, %s, %s)", (usuario, texo, isUser))
+            conexion.commit()
+            return("Mensaje guardado")    
+    except Exception as e:
+        conexion.rollback()
+        return f"Error al  gurdar mensaje: {e}"
+"""    
+
+
 def nuevaCuenta(usuario, contraseña):
     if not usuario or not contraseña:
         a = "usuario y contraseña requeridos"
