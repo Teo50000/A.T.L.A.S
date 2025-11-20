@@ -117,12 +117,12 @@ def creaUser():
     contraseña = data.get('contraseña')
     return jsonify({"mensaje": nuevaCuenta(usuario, contraseña)})
 
-@app.route("/iniSecion", methods=["POST"])
+@app.route("/iniSesion", methods=["POST"])
 def consigueUser():
     data = request.get_json()
     usuario = data.get('usuario')
     contraseña = data.get('contraseña')
-    return jsonify({"mensaje": inSecion(usuario, contraseña)})
+    return jsonify({"mensaje": inSesion(usuario, contraseña)})
  
 def agregaMnsj(us, texto, isUser):
     try:
@@ -157,7 +157,7 @@ def nuevaCuenta(usuario, contraseña):
         conexion.rollback()
         return f"Error al crear usuario: {e}"
 
-def inSecion(usuario, contraseña):
+def inSesion(usuario, contraseña):
     if not usuario or not contraseña:
         a = "usuario y contraseña requeridos"
         return a
