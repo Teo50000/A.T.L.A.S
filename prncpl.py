@@ -42,7 +42,7 @@ def consiguePromt():
         return jsonify({"mensaje":"Falta el prompt"})
     token = request.headers.get('Authorization')
     if(token == None):
-        return jsonify({"mensaje":"Inicia sesión de y vuelve a intentarlo"})
+        return jsonify({"mensaje":f"{interpretan(prompt)} \n(Se recomienda iniciar sesion)"})
     if token.startswith("Bearer "):
             token = token[7:]  # Elimina "Bearer " (7 caracteres)
     try:

@@ -362,13 +362,14 @@ function renderAssistant() {
   // Funcionalidad del chat
   initChat();
 }
-token = ""
+let token = ""
 // Inicializar chat
 async function initChat() {
   const chatBody = document.getElementById('chatBody');
   const chatInput = document.getElementById('chatInput');
   const sendButton = document.getElementById('sendButton');
-
+  
+  if(token != ""){
   const res = await fetch("http://127.0.0.1:5000/mensajeViejo", {
     method: "GET",
     headers: {
@@ -390,6 +391,8 @@ async function initChat() {
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
   }
+  }
+  
 
 
   async function addMessage(text, isUser = false) {
@@ -403,7 +406,7 @@ async function initChat() {
     messageDiv.appendChild(messageText);
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
-    
+    if(token != ""){
     const res = await fetch("http://127.0.0.1:5000/mensajeNuevo", {
       method: "POST",
       headers: {
@@ -412,6 +415,7 @@ async function initChat() {
       },
       body: JSON.stringify({ text, isUser })
     });
+  }
     
   }
 
