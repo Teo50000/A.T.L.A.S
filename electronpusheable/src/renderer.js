@@ -20,6 +20,39 @@ const exitOk = document.getElementById('exitOk');
 // Estado de la aplicación
 let currentSlide = 0;
 let isDarkMode = true;
+const historyActions = [
+  {
+    title: 'Creación de documentos',
+    description: 'Generó 5 archivos Word con plantillas personalizadas',
+    time: 'Hace 2 minutos',
+    status: 'completed'
+  },
+  {
+    title: 'Organización de carpetas',
+    description: 'Reorganizó 23 archivos por fecha y tipo',
+    time: 'Hace 15 minutos',
+    status: 'completed'
+  },
+  {
+    title: 'Búsqueda avanzada',
+    description: 'Encontró 12 archivos PDF creados la semana pasada',
+    time: 'Hace 1 hora',
+    status: 'completed'
+  },
+  {
+    title: 'Análisis de duplicados',
+    description: 'Identificó y eliminó 8 archivos duplicados',
+    time: 'Hace 2 horas',
+    status: 'completed'
+  },
+  {
+    title: 'Sincronización en progreso',
+    description: 'Procesando 45 archivos de imagen...',
+    time: 'Ahora',
+    status: 'progress'
+  }
+];
+let historyOutsideClickHandler = null;
 
 // Router simple
 const routes = {
@@ -189,19 +222,16 @@ function renderHome() {
               
               <div class="carousel-content">
                 <div class="carousel-slide">
-                  <div class="slide-icon">🤖</div>
                   <h3 class="slide-title">¿Qué es Atlas?</h3>
                   <p class="slide-text">Atlas es una inteligencia artificial diseñada para ayudarte a organizar y encontrar archivos en tu computadora de forma eficiente. A partir de información lo más específica posible (por ejemplo, documentos de Word, archivos PDF o incluso archivos de código como .js, .py, etc.), Atlas puede crear o localizar rápidamente el archivo que necesitás. Cuando creas archivos, podés incluso pedirle que ponga en el archivo determinado texto, siempre y cuando vos le presentes la información necesaria para que cree un archivo o más con ese texto. Incluso se le puede pedir a Atlas varios archivos al mismo tiempo y de diferentes tipos. También se le puede pedir que le ponga un nombre específico a cada uno de los archivos.</p>
                 </div>
                 
                 <div class="carousel-slide">
-                  <div class="slide-icon">⚙️</div>
                   <h3 class="slide-title">¿Cómo funciona?</h3>
                   <p class="slide-text">En lugar de mover el archivo de su ubicación original, Atlas crea una copia, o un nuevo archivo y la pone a tu disposición directamente en el escritorio. De esta manera, el archivo original permanece intacto, evitando romper interacciones con otras carpetas o aplicaciones que dependan de su ubicación original. Es importante tener en cuenta que Atlas solo puede acceder y mostrarte archivos si se le proporciona información lo suficientemente precisa para ubicarlos. En caso de no proporcionar información necesaria se te notificará a través del chat, indicándote qué necesita más detalles para continuar con la búsqueda.</p>
                 </div>
                 
                 <div class="carousel-slide">
-                  <div class="slide-icon">💡</div>
                   <h3 class="slide-title">¿Cómo lo uso?</h3>
                   <p class="slide-text">Para que ATLAS ubique los archivos que necesitas tendrás que especificar lo que querés crear a través de la barra de texto, lo más detallado posible. Ej: tipo de archivo, nombre del archivo, qué día lo creó, a qué hora, etc. ATLAS también se puede usar como una forma de automatizar la creación de archivos, como por ejemplo que quieras generar múltiples archivos que ambos tengan escrita la siguiente información* Y luego le proporcionas la información que querés. También puede buscar un conjunto de archivos siempre y cuando tengan una similitud que cumplen todos (Como por ejemplo, "Todos los archivos word creados ayer").</p>
                 </div>
@@ -245,16 +275,6 @@ function renderHome() {
           </div>
         </div>
       </section>
-
-      <!-- Historial -->
-      <section class="history-section">
-        <div class="container">
-          <h2 class="history-title">Historial de Acciones</h2>
-          <div class="history-list" id="historyList">
-            <!-- Se llenará dinámicamente -->
-          </div>
-        </div>
-      </section>
     </div>
   `;
 
@@ -267,67 +287,89 @@ function renderHome() {
     e.preventDefault();
     navigate('/assistant');
   });
-
-  // Generar historial de acciones
-  generateHistory();
 }
 
-// Generar historial de acciones
-function generateHistory() {
-  const historyList = document.getElementById('historyList');
-  if (!historyList) return;
+function buildHistoryMarkup() {
+  return historyActions.map(action => {
+    const initials = action.title
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
 
-  const actions = [
-    {
-      icon: '📄',
-      title: 'Creación de documentos',
-      description: 'Generó 5 archivos Word con plantillas personalizadas',
-      time: 'Hace 2 minutos',
-      status: 'completed'
-    },
-    {
-      icon: '🗂️',
-      title: 'Organización de carpetas',
-      description: 'Reorganizó 23 archivos por fecha y tipo',
-      time: 'Hace 15 minutos',
-      status: 'completed'
-    },
-    {
-      icon: '🔍',
-      title: 'Búsqueda avanzada',
-      description: 'Encontró 12 archivos PDF creados la semana pasada',
-      time: 'Hace 1 hora',
-      status: 'completed'
-    },
-    {
-      icon: '📊',
-      title: 'Análisis de duplicados',
-      description: 'Identificó y eliminó 8 archivos duplicados',
-      time: 'Hace 2 horas',
-      status: 'completed'
-    },
-    {
-      icon: '🔄',
-      title: 'Sincronización en progreso',
-      description: 'Procesando 45 archivos de imagen...',
-      time: 'Ahora',
-      status: 'progress'
+    return `
+      <div class="history-item">
+        <div class="history-icon">${initials}</div>
+        <div class="history-content">
+          <div class="history-title-item">${action.title}</div>
+          <div class="history-description">${action.description}</div>
+          <div class="history-time">${action.time}</div>
+        </div>
+        <div class="history-status ${action.status}">
+          ${action.status === 'completed' ? 'Completado' : 'En progreso'}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function initHistoryPanel() {
+  const toggle = document.getElementById('historyToggle');
+  const panel = document.getElementById('historyPanel');
+  const closeBtn = document.getElementById('historyClose');
+  const list = document.getElementById('historyPanelList');
+
+  if (!toggle || !panel || !list) {
+    if (historyOutsideClickHandler) {
+      document.removeEventListener('click', historyOutsideClickHandler);
+      historyOutsideClickHandler = null;
     }
-  ];
+    return;
+  }
 
-  historyList.innerHTML = actions.map(action => `
-    <div class="history-item">
-      <div class="history-icon">${action.icon}</div>
-      <div class="history-content">
-        <div class="history-title-item">${action.title}</div>
-        <div class="history-description">${action.description}</div>
-        <div class="history-time">${action.time}</div>
-      </div>
-      <div class="history-status ${action.status}">
-        ${action.status === 'completed' ? 'Completado' : 'En progreso'}
-      </div>
-    </div>
-  `).join('');
+  list.innerHTML = buildHistoryMarkup();
+
+  const setVisible = (isVisible) => {
+    panel.classList.toggle('is-visible', isVisible);
+    panel.setAttribute('aria-hidden', String(!isVisible));
+    toggle.setAttribute('aria-expanded', String(isVisible));
+  };
+
+  toggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setVisible(!panel.classList.contains('is-visible'));
+  });
+
+  panel.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  closeBtn?.addEventListener('click', () => setVisible(false));
+
+  if (historyOutsideClickHandler) {
+    document.removeEventListener('click', historyOutsideClickHandler);
+  }
+
+  historyOutsideClickHandler = (event) => {
+    if (!document.body.contains(panel)) {
+      document.removeEventListener('click', historyOutsideClickHandler);
+      historyOutsideClickHandler = null;
+      return;
+    }
+
+    if (
+      panel.classList.contains('is-visible') &&
+      event.target instanceof Node &&
+      !panel.contains(event.target) &&
+      !toggle.contains(event.target)
+    ) {
+      setVisible(false);
+    }
+  };
+
+  document.addEventListener('click', historyOutsideClickHandler);
 }
 
 // Página del asistente
@@ -341,6 +383,9 @@ function renderAssistant() {
           <p>Asistente de Archivos IA</p>
         </div>
         <div class="chat-status">
+          <button class="history-toggle" id="historyToggle" aria-expanded="false" title="Abrir historial de acciones">
+            Historial
+          </button>
           <div class="status-dot"></div>
           <span>En línea</span>
         </div>
@@ -356,11 +401,21 @@ function renderAssistant() {
         <input type="text" id="chatInput" placeholder="Escribe tu mensaje a ATLAS..." />
         <button class="send-button" id="sendButton">Enviar</button>
       </div>
+      <section class="history-panel" id="historyPanel" aria-hidden="true">
+        <div class="history-panel-header">
+          <h4>Historial de acciones</h4>
+          <button class="history-close" id="historyClose" aria-label="Cerrar historial">×</button>
+        </div>
+        <div class="history-panel-body">
+          <div class="history-list" id="historyPanelList"></div>
+        </div>
+      </section>
     </div>
   `;
 
   // Funcionalidad del chat
   initChat();
+  initHistoryPanel();
 }
 let token = ""
 // Inicializar chat
