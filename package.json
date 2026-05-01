@@ -1,5 +1,9 @@
 {
+ "main": "electronpusheable/main.js",
+   "scripts": {
+    "start": "electron ."
+  },
   "devDependencies": {
-    "electron": "^39.2.3"
+    "electron": "^39.8.9"
   }
 }
