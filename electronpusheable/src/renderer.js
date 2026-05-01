@@ -5,21 +5,32 @@ const themeToggle = document.getElementById('themeToggle');
 const aboutBtn = document.getElementById('about');
 const privacyBtn = document.getElementById('privacy');
 const salirBtn = document.getElementById('salir');
+const authTrigger = document.getElementById('authTrigger');
+const logoutBtn = document.getElementById('logoutBtn');
 
 // Modales
 const aboutModal = document.getElementById('aboutModal');
 const privacyModal = document.getElementById('privacyModal');
 const exitModal = document.getElementById('exitModal');
+const authModal = document.getElementById('authModal');
 
 // Botones de cerrar modales
 const aboutClose = document.getElementById('aboutClose');
 const privacyClose = document.getElementById('privacyClose');
 const exitCancel = document.getElementById('exitCancel');
 const exitOk = document.getElementById('exitOk');
+const authCloseBtn = document.getElementById('authCloseBtn');
+const loginTab = document.getElementById('loginTab');
+const registerTab = document.getElementById('registerTab');
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const authFeedback = document.getElementById('authFeedback');
 
 // Estado de la aplicación
 let currentSlide = 0;
 let isDarkMode = true;
+const SESSION_STORAGE_KEY = 'atlas_auth_session';
+const API_BASE_URL = 'http://127.0.0.1:5000';
 const historyActions = [
   {
     title: 'Creación de documentos',
@@ -53,6 +64,168 @@ const historyActions = [
   }
 ];
 let historyOutsideClickHandler = null;
+
+function getSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveSession(sessionData) {
+  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessionData));
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_STORAGE_KEY);
+}
+
+function updateAuthTriggerText() {
+  if (!authTrigger) return;
+  const session = getSession();
+  const displayName = session?.name || session?.username;
+  authTrigger.textContent = displayName ? `Hola, ${displayName}` : 'Iniciar sesión';
+  logoutBtn?.classList.toggle('hidden', !session?.username);
+}
+
+function parseJwtPayload(jwtToken) {
+  try {
+    const tokenParts = jwtToken.split('.');
+    if (tokenParts.length !== 3) return null;
+    const base64 = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+    const payload = atob(padded);
+    return JSON.parse(payload);
+  } catch {
+    return null;
+  }
+}
+
+function setAuthFeedback(message, status = '') {
+  if (!authFeedback) return;
+  authFeedback.textContent = message;
+  authFeedback.classList.remove('error', 'success');
+  if (status) authFeedback.classList.add(status);
+}
+
+function setAuthMode(mode) {
+  const isLoginMode = mode === 'login';
+  loginTab?.classList.toggle('is-active', isLoginMode);
+  registerTab?.classList.toggle('is-active', !isLoginMode);
+  loginForm?.classList.toggle('hidden', !isLoginMode);
+  registerForm?.classList.toggle('hidden', isLoginMode);
+  setAuthFeedback('');
+}
+
+async function registerUserBackend({ name, username, password }) {
+  const response = await fetch(`${API_BASE_URL}/regis`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre: name, usuario: username, contraseña: password })
+  });
+  return response.json();
+}
+
+async function loginUserBackend({ username, password }) {
+  const response = await fetch(`${API_BASE_URL}/iniSesion`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ usuario: username, contraseña: password })
+  });
+  return response.json();
+}
+
+function initAuth() {
+  if (!authTrigger || !authModal) return;
+
+  updateAuthTriggerText();
+
+  authTrigger.addEventListener('click', () => {
+    authModal.classList.remove('hidden');
+    setAuthMode('login');
+  });
+
+  logoutBtn?.addEventListener('click', () => {
+    clearSession();
+    token = "";
+    updateAuthTriggerText();
+    setAuthFeedback('');
+    loginForm?.reset();
+    registerForm?.reset();
+  });
+
+  authCloseBtn?.addEventListener('click', () => {
+    authModal.classList.add('hidden');
+  });
+
+  loginTab?.addEventListener('click', () => setAuthMode('login'));
+  registerTab?.addEventListener('click', () => setAuthMode('register'));
+
+  loginForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const username = document.getElementById('loginUser')?.value.trim();
+    const password = document.getElementById('loginPassword')?.value;
+
+    if (!username || !password) {
+      setAuthFeedback('Completá usuario y contraseña.', 'error');
+      return;
+    }
+
+    try {
+      const data = await loginUserBackend({ username, password });
+      const rawMessage = data?.mensaje;
+      const backendToken = typeof rawMessage === 'string' ? rawMessage : '';
+
+      if (!backendToken || backendToken.includes('incorrecta') || backendToken.includes('no encontrado') || backendToken.includes('requeridos')) {
+        setAuthFeedback(rawMessage || 'No se pudo iniciar sesión.', 'error');
+        return;
+      }
+
+      token = backendToken;
+      const payload = parseJwtPayload(backendToken);
+      const name = payload?.name || username;
+      saveSession({
+        name,
+        username,
+        token: backendToken,
+        loggedAt: new Date().toISOString()
+      });
+      updateAuthTriggerText();
+      setAuthFeedback('Inicio de sesión exitoso.', 'success');
+      loginForm.reset();
+      setTimeout(() => authModal.classList.add('hidden'), 700);
+    } catch {
+      setAuthFeedback('Error al conectar con el backend.', 'error');
+    }
+  });
+
+  registerForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const name = document.getElementById('registerName')?.value.trim();
+    const username = document.getElementById('registerUser')?.value.trim();
+    const password = document.getElementById('registerPassword')?.value;
+
+    if (!name || !username || !password) {
+      setAuthFeedback('Completá nombre, usuario y contraseña.', 'error');
+      return;
+    }
+
+    try {
+      const data = await registerUserBackend({ name, username, password });
+      const message = data?.mensaje || 'No se pudo crear la cuenta.';
+      const success = String(message).toLowerCase().includes('exitosamente');
+      setAuthFeedback(message, success ? 'success' : 'error');
+      if (success) {
+        registerForm.reset();
+        setAuthMode('login');
+      }
+    } catch {
+      setAuthFeedback('Error al conectar con el backend.', 'error');
+    }
+  });
+}
 
 // Router simple
 const routes = {
@@ -121,7 +294,8 @@ exitOk.addEventListener('click', async () => {
 });
 
 // Handle close button clicks for all modals
-[aboutModal, privacyModal, exitModal].forEach(modal => {
+[aboutModal, privacyModal, exitModal, authModal].forEach(modal => {
+  if (!modal) return;
   const closeBtn = modal.querySelector('.close-btn');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
@@ -131,7 +305,8 @@ exitOk.addEventListener('click', async () => {
 });
 
 // Cerrar modales al hacer clic fuera
-[aboutModal, privacyModal, exitModal].forEach(modal => {
+[aboutModal, privacyModal, exitModal, authModal].forEach(modal => {
+  if (!modal) return;
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.classList.add('hidden');
@@ -432,8 +607,8 @@ async function initChat() {
       "Authorization": token
     },
   });
-  const data = await res.json();
-  data = data.ok
+  const dataRes = await res.json();
+  const data = dataRes.ok || [];
   for(let i = 0; i<data.length; i++){
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${data[i].isUser ? 'user' : 'ai'}`;
@@ -514,7 +689,8 @@ async function enviar(prompt) {
   const res = await fetch("http://127.0.0.1:5000/prompt", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...(token ? { "Authorization": token } : {})
     },
     body: JSON.stringify({ nombre })
   });
@@ -537,6 +713,8 @@ function init() {
   // Navegar a la ruta inicial
   const initialPath = window.location.pathname in routes ? window.location.pathname : '/';
   navigate(initialPath);
+  token = getSession()?.token || "";
+  initAuth();
 }
 
 // Inicializar cuando el DOM esté listo

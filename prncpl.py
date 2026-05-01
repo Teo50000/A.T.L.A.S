@@ -113,9 +113,10 @@ def muenstraMnsj(us):
 @app.route("/regis", methods=["POST"])
 def creaUser():
     data = request.get_json()
+    nombre = data.get('nombre')
     usuario = data.get('usuario')
     contraseña = data.get('contraseña')
-    return jsonify({"mensaje": nuevaCuenta(usuario, contraseña)})
+    return jsonify({"mensaje": nuevaCuenta(nombre, usuario, contraseña)})
 
 @app.route("/iniSesion", methods=["POST"])
 def consigueUser():
@@ -138,7 +139,7 @@ def agregaMnsj(us, texto, isUser):
     
 
 
-def nuevaCuenta(usuario, contraseña):
+def nuevaCuenta(nombre, usuario, contraseña):
     if not usuario or not contraseña:
         a = "usuario y contraseña requeridos"
         return a
@@ -146,7 +147,19 @@ def nuevaCuenta(usuario, contraseña):
         contraseña = contraseña.encode('utf-8')
         hasheado = bcrypt.hashpw(contraseña, bcrypt.gensalt()).decode('utf-8')
         with conexion.cursor() as cur:
-            cur.execute("INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)", (usuario, hasheado))
+            # Intentamos guardar tambien el nombre si la tabla lo soporta.
+            try:
+                cur.execute(
+                    "INSERT INTO usuario (nombre, usuario, contraseña) VALUES (%s, %s, %s)",
+                    (nombre, usuario, hasheado)
+                )
+            except Exception:
+                conexion.rollback()
+                with conexion.cursor() as cur2:
+                    cur2.execute(
+                        "INSERT INTO usuario (usuario, contraseña) VALUES (%s, %s)",
+                        (usuario, hasheado)
+                    )
             conexion.commit()
             return "Usuario creado exitosamente"
     except psycopg.errors.UniqueViolation:
@@ -161,14 +174,24 @@ def inSesion(usuario, contraseña):
     if not usuario or not contraseña:
         a = "usuario y contraseña requeridos"
         return a
-    with conexion.cursor() as cur:
-        cur.execute("SELECT contraseña FROM usuario WHERE usuario = %s", (usuario,))
-        resultado = cur.fetchone()
+    try:
+        with conexion.cursor() as cur:
+            cur.execute("SELECT nombre, contraseña FROM usuario WHERE usuario = %s", (usuario,))
+            resultado = cur.fetchone()
+    except Exception:
+        conexion.rollback()
+        with conexion.cursor() as cur:
+            cur.execute("SELECT contraseña FROM usuario WHERE usuario = %s", (usuario,))
+            resultado = cur.fetchone()
+            if resultado is not None:
+                resultado = (None, resultado[0])
     if(resultado == None):
         return "Usuario no encontrado"
-    contHash =  resultado[0].encode('utf-8')
+    nombre = resultado[0] if len(resultado) > 1 else None
+    contHash =  resultado[1].encode('utf-8')
     if(bcrypt.checkpw(contraseña.encode('utf-8'), contHash) == True):
-        token = jwt.encode({"user": usuario}, "ATLAS_GGN", algorithm="HS256")
+        display_name = nombre if nombre else usuario
+        token = jwt.encode({"user": usuario, "name": display_name}, "ATLAS_GGN", algorithm="HS256")
         if isinstance(token, bytes):
             token = token.decode('utf-8')
         return token

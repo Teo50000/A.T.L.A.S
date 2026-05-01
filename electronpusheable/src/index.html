@@ -33,6 +33,7 @@
         <button class="tab is-active" data-route="/">Inicio</button>
         <button class="tab" data-route="/assistant">Asistente IA</button>
       </nav>
+      <button id="authTrigger" class="auth-trigger" type="button">Iniciar sesión</button>
       <div class="actions">
         <button id="themeToggle" class="icon-btn" title="Cambiar tema">
           <span class="theme-text">Modo claro</span>
@@ -112,6 +113,40 @@
         <div class="modal-actions">
           <button id="exitCancel" class="btn ghost">Cancelar</button>
           <button id="exitOk" class="btn danger">Salir</button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="authModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card auth-modal-card">
+        <h3>Acceso a tu cuenta <span class="close-btn" id="authCloseBtn">×</span></h3>
+        <div class="modal-content auth-modal-content">
+          <div class="auth-tabs">
+            <button class="auth-tab is-active" id="loginTab" type="button">Iniciar sesión</button>
+            <button class="auth-tab" id="registerTab" type="button">Crear cuenta</button>
+          </div>
+
+          <form id="loginForm" class="auth-form">
+            <label class="auth-label" for="loginUser">Usuario</label>
+            <input class="auth-input" id="loginUser" type="text" autocomplete="username" required />
+            <label class="auth-label" for="loginPassword">Contraseña</label>
+            <input class="auth-input" id="loginPassword" type="password" autocomplete="current-password" required />
+            <button class="btn primary auth-submit" type="submit">Entrar</button>
+            <p class="auth-hint">Si no tienes una cuenta, no podrás iniciar sesión. En ese caso, crea una con el botón superior.</p>
+            <button id="logoutBtn" class="auth-logout hidden" type="button">Cerrar sesión</button>
+          </form>
+
+          <form id="registerForm" class="auth-form hidden">
+            <label class="auth-label" for="registerName">Nombre</label>
+            <input class="auth-input" id="registerName" type="text" autocomplete="name" required />
+            <label class="auth-label" for="registerUser">Usuario</label>
+            <input class="auth-input" id="registerUser" type="text" autocomplete="username" required />
+            <label class="auth-label" for="registerPassword">Contraseña</label>
+            <input class="auth-input" id="registerPassword" type="password" autocomplete="new-password" required />
+            <button class="btn primary auth-submit" type="submit">Crear cuenta</button>
+          </form>
+
+          <p id="authFeedback" class="auth-feedback" aria-live="polite"></p>
         </div>
       </div>
     </div>
